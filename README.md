@@ -147,6 +147,7 @@ recording.mp4
   ├─ ffmpeg ──> kept frames (screen layer, webcam layer) + voice track, frame-exact
   ├─ Playwright ──> your website: screenshots + design tokens ──> brand.css
   │             └─> websites you mention ──> B-roll screenshots
+  ├─ style.mjs ──> the style you picked ──> style.css + animated background (style.js)
   └─ timeline.mjs (edit decisions, anchored to spoken words)
          └─> compose/ (an HTML page that draws any frame from its time) ──> Playwright, frame by frame ──> ffmpeg MP4 + sound
 ```
@@ -159,11 +160,14 @@ Every frame is a pure function of time, so any moment can be previewed in second
 skills/cut-video-motion-design/
 ├── SKILL.md                  the workflow the agent follows
 ├── references/               asset sources and licences, Whisper, Playwright capture,
-│                             timeline format, design rules, troubleshooting
+│                             timeline format, design rules, animation styles,
+│                             troubleshooting
 └── scripts/                  check_env, transcribe, words, cutplan, cut_media,
-                              capture_site, brand_from_tokens, render,
-                              compose/ (the compositor page), templates/
+                              capture_site, brand_from_tokens, style, render,
+                              compose/ (the compositor page), styles/ (the 20 style
+                              presets and their animated backgrounds), templates/
 .claude-plugin/               plugin + marketplace manifests for Claude Code
+docs/                         the style board shown above
 ```
 
 ## Licence
