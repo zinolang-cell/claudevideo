@@ -16,10 +16,10 @@ function bezier(x1, y1, x2, y2) {
   return x => { if (x <= 0) return 0; if (x >= 1) return 1; let lo = 0, hi = 1, t = x; for (let i = 0; i < 40; i++) { const v = sx(t); if (Math.abs(v - x) < 1e-7) break; if (v < x) lo = t; else hi = t; t = (lo + hi) / 2; } return sy(t); };
 }
 const CSSV = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-const bez = (v, d) => { const m = /cubic-bezier(([^)]+))/.exec(v || ''); const a = m ? m[1].split(',').map(Number) : d; return bezier(...a); };
+const bez = (v, d) => { const m = /cubic-bezier\(([^)]+)\)/.exec(v || ''); const a = m ? m[1].split(',').map(Number) : d; return a.length === 4 && a.every(Number.isFinite) ? bezier(...a) : bezier(...d); };
 const EO = bez(CSSV('--ease-out'), [.16, 1, .3, 1]), EIO = bez(CSSV('--ease-in-out'), [.65, 0, .35, 1]), EBACK = bezier(.34, 1.4, .64, 1);
 const rgbOf = v => { const c = document.createElement('canvas').getContext('2d'); c.fillStyle = '#000'; c.fillStyle = v || '#000'; const h = c.fillStyle;
-  if (h[0] === '#') return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); return h.match(/[d.]+/g).slice(0, 3).map(Number); };
+  if (h[0] === '#') return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); return h.match(/[\d.]+/g).slice(0, 3).map(Number); };
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const prog = (t, t0, d) => d <= 0 ? (t >= t0 ? 1 : 0) : clamp((t - t0) / d);
 const lerp = (a, b, p) => a + (b - a) * p;
@@ -272,8 +272,9 @@ const builders = {
   wave(s) {
     const r = el('div', 'card pad wave');
     const cv = el('canvas'); cv.width = s.w - 52; cv.height = s.h; r.innerHTML = `<div class="eyebrow"><span class="dash"></span>${esc(s.eyebrow)}</div><div class="title" style="margin-bottom:16px">${s.titleHtml}</div>`;
-    r.append(cv); r.append(el('div', 'legend', `<span><i style="background:var(--blue)"></i>Speech</span><span><i style="background:#e9b7b2"></i>Pause — cut</span><span class="saved" style="margin-left:auto;color:var(--ink);font-weight:500"></span>`));
+    r.append(cv); r.append(el('div', 'legend', `<span><i style="background:var(--accent)"></i>Speech</span><span><i style="background:var(--wave-cut, #d6786e);opacity:.6"></i>Pause — cut</span><span class="saved" style="margin-left:auto;color:var(--ink);font-weight:500"></span>`));
     const ctx = cv.getContext('2d'), saved = r.querySelector('.saved');
+    const CUT = rgbOf(CSSV('--wave-cut') || '#d6786e').join(',');      // colour of the pauses that get cut
     return { root: r, update(t) {
       const c = EIO(prog(t, s.collapseAt, s.collapseDur)), N = s.peaks.length;
       // x layout: removed bins shrink to zero width as c -> 1
@@ -283,8 +284,8 @@ const builders = {
       for (let i = 0; i < N; i++) {
         const p = s.peaks[i], bw = wts[i] * sx; if (i / N > reveal) break;
         const hgt = Math.max(2, p.v * (cv.height - 8));
-        if (p.cut && bw > .3) { ctx.fillStyle = `rgba(214,120,110,${.22 * (1 - c)})`; ctx.fillRect(x, 0, bw + .5, cv.height); }
-        ctx.fillStyle = p.cut ? `rgba(214,120,110,${.55 * (1 - c) + .1})` : `rgb(${BLUE.join(',')})`;
+        if (p.cut && bw > .3) { ctx.fillStyle = `rgba(${CUT},${.22 * (1 - c)})`; ctx.fillRect(x, 0, bw + .5, cv.height); }
+        ctx.fillStyle = p.cut ? `rgba(${CUT},${.55 * (1 - c) + .1})` : `rgb(${BLUE.join(',')})`;
         if (bw > .3) { ctx.beginPath(); ctx.roundRect(x + bw * .18, mid - hgt / 2, Math.max(.6, bw * .64), hgt, Math.min(2, bw * .3)); ctx.fill(); }
         x += bw;
       }
@@ -389,7 +390,8 @@ function sceneEl(spec) {
   if (!spec) { const r = el('div', 'scene'); $('#scenes').append(r); return { r, lines: [] }; }
   const r = el('div', 'scene');
   r.innerHTML = `
-    ${spec.brand ? `<div class="brandmark" style="left:${spec.brand.x}px;top:${spec.brand.y}px">${brandImg}<span>${esc(spec.brand.text)}</span></div>` : ''}
+    ${spec.brand ? `<div class="brandmark" style="left:${spec.brand.x}px;top:${spec.brand.y}px">${brandImg}${spec.brand.sub ? `<span class="bm"><b>${esc(spec.brand.text)}</b><small>${esc(spec.brand.sub)}</small></span>` : `<span>${esc(spec.brand.text)}</span>`}</div>` : ''}
+    ${spec.art ? `<img class="art" src="${spec.art.src}" style="left:${spec.art.x}px;top:${spec.art.y}px;width:${spec.art.w}px" alt="">` : ''}
     <div class="block" style="position:absolute;left:${spec.x}px;top:${spec.y}px;width:${spec.w}px">
       <div class="eyebrow" style="margin-bottom:26px"><span class="dash"></span>${esc(spec.eyebrow)}</div>
       <h1>${spec.lines.map((l, i) => `<span class="line"><span class="${i ? 'soft' : ''}">${esc(l)}</span></span>`).join('')}</h1>
@@ -398,7 +400,7 @@ function sceneEl(spec) {
     </div>
     ${spec.tag ? `<div class="nametag" style="left:${spec.tag.x}px;top:${spec.tag.y}px">${brandImg}<div><div class="who">${esc(spec.tag.who)}</div><div class="role">${esc(spec.tag.role)}</div></div></div>` : ''}`;
   $('#scenes').append(r);
-  return { r, eyebrow: r.querySelector('.block .eyebrow'), lines: [...r.querySelectorAll('h1 .line > span')], lead: r.querySelector('.lead'), btns: r.querySelector('.block .row'), tag: r.querySelector('.nametag'), brand: r.querySelector('.brandmark') };
+  return { r, art: r.querySelector('.art'), eyebrow: r.querySelector('.block .eyebrow'), lines: [...r.querySelectorAll('h1 .line > span')], lead: r.querySelector('.lead'), btns: r.querySelector('.block .row'), tag: r.querySelector('.nametag'), brand: r.querySelector('.brandmark') };
 }
 const intro = sceneEl(S.intro), outro = sceneEl(S.outro);
 function animScene(sc, t, t0, vis) {
@@ -409,6 +411,11 @@ function animScene(sc, t, t0, vis) {
   rise(sc.eyebrow, t0 + .25, .8, 14);
   sc.lines.forEach((ln, i) => { const p = EO(prog(t, t0 + .4 + i * .14, 1.0)); ln.style.transform = `translateY(${lerp(110, 0, p)}%)`; });
   rise(sc.lead, t0 + .85, .9, 18); rise(sc.btns, t0 + 1.05, .9, 18); rise(sc.tag, t0 + .7, .9, 16);
+  if (sc.art) {                                                    // character/mascot: pops in, then bobs gently
+    const p = EBACK(prog(t, t0 + .9, .8));
+    sc.art.style.opacity = clamp(p * 1.6);
+    sc.art.style.transform = `translateY(${lerp(60, 0, p) + Math.sin((t - t0) * 2.2) * 6}px) scale(${lerp(.7, 1, p)}) rotate(${Math.sin((t - t0) * 1.4) * 2.5}deg)`;
+  }
 }
 
 // ---- master render ---------------------------------------------------------------------------------------------------------------

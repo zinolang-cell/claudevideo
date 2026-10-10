@@ -26,7 +26,7 @@ const rel = f => '/' + path.relative(P.dir, path.resolve(P.dir, f)).split(path.s
 const segs = cuts.segments;
 const at = s => { let last = 0; for (const g of segs) { if (s < g.s0) return g.o0; if (s < g.s1) return +(g.o0 + s - g.s0).toFixed(4); last = g.o1; } return last; };
 const sites = (name, kind = 'viewport') => rel(`build/sites/${name}/${kind}.png`);
-const timeline = (await import(pathToFileURL(path.join(P.dir, 'timeline.mjs')).href + '?v=' + Date.now())).default({ at, sites, P, cuts });
+const timeline = (await import(pathToFileURL(path.join(P.dir, 'timeline.mjs')).href + '?v=' + Date.now())).default({ at, sites, P, cuts, asset: p => rel(p) });
 
 // ---- assets: icons inline, logos copied into build/assets --------------------------------------------------------
 const used = { icons: new Set(['check-bold', 'x-bold', 'arrow-up-bold', 'lock-simple']), logos: new Set() };

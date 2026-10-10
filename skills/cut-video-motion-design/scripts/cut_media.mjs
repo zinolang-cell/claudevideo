@@ -47,7 +47,7 @@ const graph = R
   ? `[0:v]fps=${SRC_FPS},select='${select}',setpts=N/${SRC_FPS}/TB,split=2[a][b];[a]crop=${S.w}:${S.h}:${S.x}:${S.y},${toJpeg}[s];[b]crop=${side}:${side}:${camX}:${camY},${toJpeg}[c]`
   : `[0:v]fps=${SRC_FPS},select='${select}',setpts=N/${SRC_FPS}/TB,crop=${S.w}:${S.h}:${S.x}:${S.y},${toJpeg}[s]`;
 // ffmpeg >= 7 reads option values from files with "-/option"; older builds use -filter_complex_script
-const ffMajor = +(/ffmpeg version n?(d+)/.exec(spawnSync('ffmpeg', ['-version'], { encoding: 'utf8' }).stdout)?.[1] || 7);
+const ffMajor = +(/ffmpeg version n?(\d+)/.exec(spawnSync('ffmpeg', ['-version'], { encoding: 'utf8' }).stdout)?.[1] || 7);
 const graphArg = ffMajor >= 7 ? '-/filter_complex' : '-filter_complex_script';
 fs.writeFileSync(P.build('select.txt'), graph);
 const outs = ['-map', '[s]', '-fps_mode', 'passthrough', '-q:v', '2', P.build('frames/screen/%05d.jpg')];

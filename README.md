@@ -138,4 +138,4 @@ Brand names and logos belong to their owners. This project is not affiliated wit
 
 ## Author
 
-Made by Zino Lang ([avolang.de](https://avolang.de)). The tutorial video that introduces this skill was edited with it.
+Made by Zino Lang. Watch the tutorial on YouTube at [@LearnLanguageModel](https://www.youtube.com/@LearnLanguageModel) and find more at [learnlanguagemodel.com](https://learnlanguagemodel.com). The tutorial video that introduces this skill was edited with it.

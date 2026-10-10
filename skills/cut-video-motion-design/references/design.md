@@ -16,6 +16,9 @@ From the captured site (or the chosen style), carry over:
 | Button styles (solid light, ghost or glass) | Outro buttons |
 | Easing curves in the CSS | `--ease-out` / `--ease-in-out` drive all motion |
 | Hero image or video | Darkened intro/outro backdrop with a slow push-in |
+| No dark hero (bright app-style sites) | Gradient backdrop in the darkest brand colour with an accent glow |
+| "3D" buttons, options and cards with a darker bottom edge | `brand.css` overrides: `border: 2px solid var(--line); border-bottom: 5px solid <lip colour>` on `.card`, `.chip`, `.btn`, `.kbd` |
+| Mascot or character in the logo | Outro `art` that pops in next to the call to action; the logo on a light tile on dark scenes so it doesn't disappear |
 
 Without a website reference, pick one restrained palette: ink, one accent, a soft background and one hairline colour. Use one type family in two weights. Everything else follows from those choices.
 

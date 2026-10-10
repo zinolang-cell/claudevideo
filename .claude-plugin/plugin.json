@@ -1,14 +1,23 @@
 {
   "name": "cut-video-motion-design",
   "displayName": "Cut Video + Motion Design",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Turn a raw screen recording or talking-head video into a finished edit: pauses cut, word-by-word captions, zooms, spotlights, motion-design cards and website screenshots as B-roll, styled after your own website. Runs locally with Whisper, Playwright and ffmpeg.",
   "author": {
     "name": "Zino Lang",
-    "url": "https://avolang.de"
+    "url": "https://www.youtube.com/@LearnLanguageModel"
   },
   "homepage": "https://github.com/zinolang-cell/claudevideo",
   "repository": "https://github.com/zinolang-cell/claudevideo",
   "license": "MIT",
-  "keywords": ["video", "video-editing", "captions", "motion-design", "whisper", "playwright", "ffmpeg", "skill"]
+  "keywords": [
+    "video",
+    "video-editing",
+    "captions",
+    "motion-design",
+    "whisper",
+    "playwright",
+    "ffmpeg",
+    "skill"
+  ]
 }

@@ -87,6 +87,10 @@ Run `node cut_media.mjs`. ffmpeg selects the kept frames by index and writes the
   1. Run `node capture_site.mjs <url> build/sites/<name>`. It dismisses cookie banners, scrolls to trigger lazy and reveal content, and saves viewport, full-page and per-section screenshots plus `tokens.json`: CSS variables, fonts, a weighted colour census, h1/h2/button styles and logo candidates.
   2. Look at the screenshots. Note the eyebrow labels, heading weight and tracking, card shapes, carousel or dot patterns, and how the accent colour is used. Mirror those details in the motion design; they make the video feel like the brand instead of a template.
   3. Run `node brand_from_tokens.mjs build/sites/<name>/tokens.json` to write `build/brand.css`. It installs the site's font from Fontsource when it is open-source; otherwise pass `--font "<open lookalike>"`.
+
+     If `tokens.json` has no `cssVars` (common for React Native/Expo and CSS-in-JS sites), read the palette from the colour census and the screenshots instead. If the user owns the site's source, read its theme file (e.g. `theme.ts`), which is the most accurate source.
+
+     `brand.css` is plain CSS loaded last, so append overrides for patterns the variables can't express: chunky 3D buttons with a darker bottom border, a warm paper background, a logo tile on dark scenes.
   4. For a clean intro/outro background, capture the hero again with its text hidden: `--hide "h1, header, nav, .hero p" --prefix hero-clean- --dsf 1`.
 - **Style reference:** run `node brand_from_tokens.mjs --preset clean|editorial|bold|calm`, or edit `build/brand.css` by hand from the user's description. Every visual decision is a CSS variable.
 - **B-roll:** capture every site the speaker mentions (stock sites, tools, docs) with `node capture_site.mjs <url> build/sites/<name> --no-tokens --sections 0 --width 1600 --height 1000 --dsf 1.5`. Check each capture: reveal-on-scroll pages can come out blank in full-page shots, and section shots are often more reliable. Stack several sections with ffmpeg `vstack` for a scrolling shot.

@@ -62,6 +62,7 @@ export default ({ at, sites, P, cuts }) => ({ layout, introEnd, outroStart, diss
 - `at(src)` maps a **source** time (seconds in the raw recording) to the output timeline. Write every time as `at(<source seconds>)` and take the seconds from `build/cuts.json` → `words[].src` (or from `build/words.json`). If you re-cut later, nothing drifts.
 - Inside a removed pause, `at()` returns the start of the next kept segment.
 - `sites(name, kind = 'viewport')` returns the served path of `build/sites/<name>/<kind>.png`.
+- `asset(path)` returns the served path of any file in the project (a mascot image, a logo, a still).
 - **Screen coordinates** (camera rects, spots) are pixels in the `screen` crop, i.e. source pixel minus `screen.x/y`.
 - **Frame coordinates** (callout x/y, B-roll) are output pixels (1920×1080).
 
@@ -92,6 +93,12 @@ outro: { x: 900, y: 290, w: 940, eyebrow: 'Thanks for watching', lines: ['Line o
          brand: { x: 80, y: 56, text: 'example.com' } },
 chapters: [{ t: at(9.05), title: 'Download VS Code' }, ...],   // header eyebrow "— 01 · TITLE" + progress dots
 ```
+
+Scene options:
+
+- **`brand: { x, y, text, sub }`**: `sub` turns the brand mark into a two-line wordmark ("Learn" / "LANGUAGE MODEL").
+- **`art: { src: asset('assets/brand/mascot.png'), x, y, w }`**: puts a character or mascot into the scene. It pops in after the headline and then bobs gently. The outro is a good place for it: a mascot waving goodbye next to the call to action.
+- **`--wave-cut`** in `brand.css` sets the colour of the cut pauses in the `wave` card. Pick a muted colour that differs from the accent.
 
 ## 4. Camera, spots, holds
 
