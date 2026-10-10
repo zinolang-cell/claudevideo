@@ -1,0 +1,33 @@
+{
+  "source": "../recording.mp4",
+  "output": "../recording_edit.mp4",
+  "buildDir": "build",
+  "size": [1920, 1080],
+  "language": "en",
+  "screen": { "x": 0, "y": 0, "w": 1920, "h": 1080 },
+  "whisper": {
+    "bin": "",
+    "model": "",
+    "prompt": "Names and products spelled the way you want them."
+  },
+  "fixes": [],
+  "cut": {
+    "thresholdDb": -42,
+    "speechDb": -30,
+    "minGap": 0.12,
+    "minBlip": 0.05,
+    "pre": 0.08,
+    "post": 0.14,
+    "leadIn": 0.25,
+    "tail": 0.3,
+    "pause": { "sentence": 0.34, "comma": 0.22, "word": 0.12 },
+    "outroHold": 2.5
+  },
+  "captions": { "maxChars": 42, "idealChars": 34, "skip": [] },
+  "drop": [],
+  "brand": {},
+  "sfx": {
+    "whoosh": { "synth": "whoosh", "gain": -20 }
+  },
+  "render": { "fps": 60, "workers": 6, "crf": 17, "preset": "medium", "jpegQuality": 95 }
+}

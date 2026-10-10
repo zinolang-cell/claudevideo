@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>compose</title>
+<link rel="stylesheet" href="/compose/style.css">
+<link rel="stylesheet" href="/build/brand.css">
+</head>
+<body>
+<div id="stage">
+  <div id="bg-light"></div>
+  <div id="bg-dark"><img alt=""></div>
+  <div id="plate">
+    <div id="cam-space"><canvas id="scr"></canvas></div>
+    <div id="plate-dim"></div>
+  </div>
+  <div id="plate-fx"></div>
+  <div id="broll"></div>
+  <div id="callouts" class="abs" style="width:1920px;height:1080px"></div>
+  <div id="scenes" class="abs" style="width:1920px;height:1080px"></div>
+  <div id="cam"><canvas id="camcv" style="position:absolute"></canvas></div>
+  <div id="header"><div id="chapter"></div><div id="dots"></div></div>
+  <div id="captions"></div>
+  <div id="fade" style="position:absolute;inset:0;background:#05070a;opacity:0"></div>
+</div>
+<script type="module" src="/compose/compose.js"></script>
+</body>
+</html>

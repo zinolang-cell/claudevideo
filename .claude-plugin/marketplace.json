@@ -1,0 +1,17 @@
+{
+  "name": "claudevideo",
+  "description": "Video editing skill for Claude Code: cut pauses, animated captions, motion design and website-styled B-roll with Whisper, Playwright and ffmpeg.",
+  "owner": {
+    "name": "Zino Lang",
+    "url": "https://github.com/zinolang-cell"
+  },
+  "plugins": [
+    {
+      "name": "cut-video-motion-design",
+      "source": "./",
+      "description": "Turn a raw screen recording or talking-head video into a finished edit: pauses cut, word-by-word captions, zooms, spotlights, motion-design cards and website screenshots as B-roll, styled after your own website. No Hyperframes, no Remotion.",
+      "category": "media",
+      "tags": ["video", "video-editing", "captions", "subtitles", "motion-design", "whisper", "playwright", "ffmpeg"]
+    }
+  ]
+}

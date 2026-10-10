@@ -1,0 +1,18 @@
+# dependencies and per-project output (the scripts are copied into a project folder next to each video)
+node_modules/
+build/
+*.log
+
+# media never belongs in this repo
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.wav
+*.mp3
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/

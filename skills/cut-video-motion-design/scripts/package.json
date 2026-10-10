@@ -1,0 +1,19 @@
+{
+  "name": "video-edit-project",
+  "private": true,
+  "description": "Pause cutting, captions, motion design and website-styled B-roll with Whisper, Playwright and ffmpeg.",
+  "scripts": {
+    "check": "node check_env.mjs",
+    "transcribe": "node transcribe.mjs",
+    "words": "node words.mjs",
+    "cut": "node cutplan.mjs --verbose",
+    "media": "node cut_media.mjs",
+    "sheet": "node render.mjs --sheet 24",
+    "render": "node render.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.64.0",
+    "@phosphor-icons/core": "^2.1.1",
+    "simple-icons": "^16.34.0"
+  }
+}
