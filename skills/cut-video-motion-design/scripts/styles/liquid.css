@@ -1,0 +1,26 @@
+/* 04 Liquid Morph: vivid gradient blobs, rounded cards, gradient headlines. Blobs: fx/liquid.js */
+@font-face { font-family: 'StyleSans'; src: url('/node_modules/@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: block; }
+:root {
+  --font: 'StyleSans', system-ui, sans-serif;
+  --ink: #1B1340; --ink-2: #2B2160; --muted: #6B6390;
+  --bg: #FFFFFF; --bg-soft: #F6F2FF; --bg-tint: #EEE7FF; --line: #E6DDFB; --line-strong: #CFC2F2; --dot: #CFC2F2;
+  --accent: #7B2FF7; --accent-deep: #3B0E8C; --accent-soft: #EDE3FF; --accent-light: #F3B4FF; --hero: #0B0620;
+  --scene-hl: #F107A3; --scene-soft: #F3B4FF;
+  --r-s: 16px; --r: 26px; --r-l: 34px;
+  --shadow-1: 0 10px 30px rgba(123,47,247,.12); --shadow-2: 0 18px 50px rgba(123,47,247,.18); --shadow-3: 0 30px 90px rgba(59,14,140,.28);
+  --display-weight: 700; --display-tracking: -.045em; --title-weight: 600; --ui-weight: 600; --wave-cut: #C9BFE6;
+}
+#bg-light { background: #F6F2FF; } #bg-light::after { display: none; }
+#bg-dark { background: #0B0620; } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 5px #FFF, 0 20px 60px rgba(123,47,247,.45); }
+.card, .chip, .steps .st { border: 1px solid rgba(123,47,247,.14); }
+.chip.dark { background: linear-gradient(120deg, #7B2FF7, #F107A3); color: #FFF; border: none; } .chip.dark svg { color: #FFF; }
+.icon { background: linear-gradient(135deg, #EDE3FF, #FFE3F3); color: #7B2FF7; border-radius: 16px; }
+.scene h1 { font-size: 112px; }
+.scene h1 .line > span { background: linear-gradient(100deg, #FFFFFF 0%, #F3B4FF 45%, #FFB36B 100%); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .04em; }
+.btn { border-radius: 999px; } .btn.light { background: linear-gradient(120deg, #7B2FF7, #F107A3); color: #FFF; }
+.nametag { background: rgba(255,255,255,.08); }
+.cap .hl { border-radius: 999px; }
+.tag { background: linear-gradient(120deg, #7B2FF7, #F107A3); }
+.spot .ring { border-radius: 18px; border-color: #FFF; box-shadow: 0 0 0 5px rgba(241,7,163,.45), 0 0 34px 8px rgba(123,47,247,.5); }
+.spot .label { background: linear-gradient(120deg, #7B2FF7, #F107A3); border-radius: 999px; }

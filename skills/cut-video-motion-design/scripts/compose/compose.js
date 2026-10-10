@@ -168,9 +168,12 @@ const capLines = S.captions.map(line => {
   return { line, root, hl, words, geo: null };
 });
 const INK = rgbOf(CSSV('--ink')), WHITE = [255, 255, 255], BLUE = rgbOf(CSSV('--accent')), BLUE_SOFT = rgbOf(CSSV('--accent-soft')), DOT = rgbOf(CSSV('--dot'));
+// caption colours: main layout (--hl pill, --hl-ink active word) and dark/light scenes (--scene-*); defaults keep the classic look
+const HL = rgbOf(CSSV('--hl') || CSSV('--accent-soft')), HL_INK = rgbOf(CSSV('--hl-ink') || CSSV('--accent'));
+const SC_INK = rgbOf(CSSV('--cap-scene-ink') || CSSV('--scene-ink') || '#ffffff'), SC_HL = rgbOf(CSSV('--scene-hl') || CSSV('--accent')), SC_HL_INK = rgbOf(CSSV('--scene-hl-ink') || '#ffffff');
 function renderCaptions(t) {
   const k = mainK(t), light = k;                               // 1 = light canvas (ink text), 0 = dark scene
-  const textOn = mixRGB(WHITE, INK, light), activeTxt = mixRGB(WHITE, BLUE, light), pillBg = mixRGB(BLUE, BLUE_SOFT, light);
+  const textOn = mixRGB(SC_INK, INK, light), activeTxt = mixRGB(SC_HL_INK, HL_INK, light), pillBg = mixRGB(SC_HL, HL, light);
   for (let i = 0; i < capLines.length; i++) {
     const C = capLines[i], line = C.line, next = S.captions[i + 1];
     const t0 = line.s - .14, t1 = next ? Math.min(next.s - .14, line.e + 1.4) : line.e + 1.6;
@@ -400,7 +403,7 @@ function sceneEl(spec) {
     </div>
     ${spec.tag ? `<div class="nametag" style="left:${spec.tag.x}px;top:${spec.tag.y}px">${brandImg}<div><div class="who">${esc(spec.tag.who)}</div><div class="role">${esc(spec.tag.role)}</div></div></div>` : ''}`;
   $('#scenes').append(r);
-  return { r, art: r.querySelector('.art'), eyebrow: r.querySelector('.block .eyebrow'), lines: [...r.querySelectorAll('h1 .line > span')], lead: r.querySelector('.lead'), btns: r.querySelector('.block .row'), tag: r.querySelector('.nametag'), brand: r.querySelector('.brandmark') };
+  return { r, h1: r.querySelector('h1'), art: r.querySelector('.art'), eyebrow: r.querySelector('.block .eyebrow'), lines: [...r.querySelectorAll('h1 .line > span')], lead: r.querySelector('.lead'), btns: r.querySelector('.block .row'), tag: r.querySelector('.nametag'), brand: r.querySelector('.brandmark') };
 }
 const intro = sceneEl(S.intro), outro = sceneEl(S.outro);
 function animScene(sc, t, t0, vis) {
@@ -446,11 +449,24 @@ async function renderFrame(t) {
   renderBroll(t);
   animScene(intro, t, 0, t < S.outroStart ? 1 - EIO(prog(t, S.introEnd - .55, .45)) : 0);
   animScene(outro, t, S.outroStart + .3, outroK(t));
+  FX?.title?.(intro, t, 0); FX?.title?.(outro, t, S.outroStart + .3);
+  FX?.frame?.(t, { k, bk, ko: outroK(t), intro: t < S.introEnd + 1, chapter: S.chapters.filter(c => c.t <= t).at(-1) || null });
   renderCaptions(t);
   fadeOut.style.opacity = EIO(prog(t, S.duration - .7, .7));
 }
 
+// ---- optional animation-style module (build/style.js): animated backgrounds/overlays, headline effects -------------
+const FX = S.styleFx ? await import(S.styleFx).catch(e => { console.error('style module:', e.message); return null; }) : null;
 await document.fonts.ready;
+await FX?.init?.({ bg: $('#fx-bg'), top: $('#fx-top'), W, H, S, helpers: { EO, EIO, EBACK, clamp, prog, lerp, CSSV, rgbOf } });
+// headlines keep one line per entry: shrink the font until the widest line fits the scene block. Measure the final
+// state, after a style's title() effect has run (prompts, flap tiles, split words change the width).
+for (const [sc, spec] of [[intro, S.intro], [outro, S.outro]]) {
+  if (!sc.h1 || !spec?.w) continue;
+  FX?.title?.(sc, 1e6, 0);
+  const widest = Math.max(...[...sc.h1.querySelectorAll('.line > span')].map(l => l.scrollWidth));
+  if (widest > spec.w) sc.h1.style.fontSize = parseFloat(getComputedStyle(sc.h1).fontSize) * spec.w / widest * .98 + 'px';
+}
 await Promise.all([...document.images].map(im => im.decode().catch(() => {})));
 window.renderFrame = renderFrame;
 window.composeReady = true;

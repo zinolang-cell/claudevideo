@@ -1,0 +1,19 @@
+/* 14 Topo Lines: topographic contour lines, earthy greens. Flowing contours: fx/topo.js */
+@font-face { font-family: 'StyleSans'; src: url('/node_modules/@fontsource-variable/sora/files/sora-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; font-display: block; }
+:root {
+  --font: 'StyleSans', system-ui, sans-serif;
+  --ink: #1E2B22; --ink-2: #2C3B30; --muted: #6E7A68;
+  --bg: #FFFFFF; --bg-soft: #F4F1E8; --bg-tint: #ECE7D8; --line: #E0D9C6; --line-strong: #C9BFA8; --dot: #C9BFA8;
+  --accent: #2F8F5B; --accent-deep: #0F1A17; --accent-soft: #DDEFD9; --accent-light: #B8F56A; --hero: #0F1A17;
+  --scene-hl: #B8F56A; --scene-hl-ink: #0F1A17; --scene-soft: #B8F56A;
+  --r-s: 8px; --r: 12px; --r-l: 18px;
+  --display-weight: 600; --display-tracking: -.035em; --title-weight: 600; --ui-weight: 600; --wave-cut: #C9BFA8;
+}
+#bg-light { background: #F4F1E8; } #bg-light::after { display: none; }
+#bg-dark { background: radial-gradient(1300px 900px at 70% 30%, #13241D, #0B1512); } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 5px #F4F1E8, 0 20px 50px rgba(0,0,0,.35); }
+.card { border: 1px solid #E0D9C6; }
+.chip.dark { background: #0F1A17; } .chip.dark svg { color: #B8F56A; }
+.btn.light { background: #B8F56A; color: #0F1A17; }
+.tag { background: #0F1A17; } .tag .lic { color: #B8F56A; }
+.spot .ring { box-shadow: 0 0 0 5px rgba(47,143,91,.5), 0 0 30px 6px rgba(184,245,106,.35); } .spot .label { background: #2F8F5B; }

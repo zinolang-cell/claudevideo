@@ -1,0 +1,28 @@
+/* 05 Glassmorphism: frosted glass cards over a vivid gradient. Drifting light: fx/glass.js */
+@font-face { font-family: 'StyleSans'; src: url('/node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: block; }
+:root {
+  --font: 'StyleSans', system-ui, sans-serif;
+  --ink: #FFFFFF; --ink-2: #F4EEFF; --muted: #E3D6F5;
+  --bg: #FFFFFF; --bg-soft: #2A1A55; --bg-tint: #3A2A6A; --line: #8F7FB8; --line-strong: #B5A8DA; --dot: #9C8CC4;
+  --accent: #FFD6F5; --accent-deep: #1B1036; --accent-soft: #4A2F7F; --accent-light: #FFD6F5; --hero: #1B1036;
+  --hl: #B66BE0; --hl-ink: #FFFFFF; --scene-hl: #B66BE0; --scene-hl-ink: #FFFFFF; --scene-soft: rgba(255,255,255,.72);
+  --r-s: 14px; --r: 22px; --r-l: 30px;
+  --shadow-1: 0 8px 32px rgba(10,5,30,.25); --shadow-2: 0 12px 40px rgba(10,5,30,.30); --shadow-3: 0 30px 80px rgba(10,5,30,.45);
+  --display-weight: 700; --display-tracking: -.045em; --title-weight: 600; --ui-weight: 600; --wave-cut: #8F7FB8;
+}
+#bg-light, #bg-dark { background: linear-gradient(135deg, #1B1036 0%, #3A1C71 38%, #D76D77 78%, #FFAF7B 100%); }
+#bg-light::after, #bg-dark::after { display: none; }
+#plate { border: 1px solid rgba(255,255,255,.35); }
+#cam { box-shadow: 0 0 0 1px rgba(255,255,255,.55), 0 0 0 9px rgba(255,255,255,.14), 0 20px 50px rgba(10,5,30,.4); }
+.card, .chip, .steps .st, .nametag, .browser .bar, .tag { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.38); color: #FFF;
+  -webkit-backdrop-filter: blur(22px) saturate(160%); backdrop-filter: blur(22px) saturate(160%); }
+.card .sub, .list .li .meta, .steps .st .s { color: rgba(255,255,255,.78); }
+.card .title b, .steps h2 span, .list .title b { color: #FFD6F5; }
+.icon { background: rgba(255,255,255,.22); color: #FFF; }
+.kbd { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.4); color: #FFF; }
+.chip svg { color: #FFF; } .chip.dark { background: rgba(20,10,40,.45); }
+.btn.light { background: rgba(255,255,255,.92); color: #3A1C71; } .btn.glass { background: rgba(255,255,255,.14); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.cap .hl { border-radius: 12px; }
+.list .li { border-color: rgba(255,255,255,.22); } .check { background: rgba(255,255,255,.3); }
+.spot .ring { border: 1.5px solid rgba(255,255,255,.95); box-shadow: 0 0 0 6px rgba(255,255,255,.18), 0 0 30px 6px rgba(255,175,123,.45); }
+.spot .label { background: rgba(255,255,255,.24); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }

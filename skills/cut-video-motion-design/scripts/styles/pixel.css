@@ -1,0 +1,33 @@
+/* 03 Pixel Art: 8-bit palette, pixel font, notched pixel borders. Stars + skyline: fx/pixel.js */
+@font-face { font-family: 'StyleDisplay'; src: url('/node_modules/@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'StylePixel'; src: url('/node_modules/@fontsource-variable/pixelify-sans/files/pixelify-sans-latin-wght-normal.woff2') format('woff2'); font-weight: 400 700; font-display: block; }
+:root {
+  --font: 'StylePixel', monospace; --font-display: 'StyleDisplay', monospace; --font-title: 'StyleDisplay', monospace;
+  --ink: #FFF1E8; --ink-2: #FFF1E8; --muted: #C2C3C7;
+  --bg: #1D2B53; --bg-soft: #1D2B53; --bg-tint: #29366F; --line: #5F574F; --line-strong: #83769C; --dot: #5F574F;
+  --accent: #FFEC27; --accent-deep: #7E2553; --accent-soft: #FF004D; --accent-light: #29ADFF; --hero: #000000;
+  --hl: #FFEC27; --hl-ink: #000000; --scene-hl: #FF004D; --scene-hl-ink: #FFF1E8; --scene-soft: #FFEC27;
+  --r-s: 0px; --r: 0px; --r-l: 0px;
+  --px: 0 -4px 0 0 #FFF1E8, 0 4px 0 0 #FFF1E8, -4px 0 0 0 #FFF1E8, 4px 0 0 0 #FFF1E8;
+  --shadow-1: var(--px); --shadow-2: var(--px), 8px 8px 0 4px #000; --shadow-3: 0 0 0 4px #FFF1E8, 0 0 0 8px #000, 10px 10px 0 8px #000;
+  --display-weight: 700; --display-tracking: 0em; --title-weight: 700; --ui-weight: 600; --wave-cut: #5F574F;
+}
+#bg-light { background: #1D2B53; }
+#bg-light::after { opacity: .5; background-image: linear-gradient(rgba(255,241,232,.05) 2px, transparent 2px), linear-gradient(90deg, rgba(255,241,232,.05) 2px, transparent 2px); background-size: 16px 16px; -webkit-mask-image: none; mask-image: none; }
+#bg-dark { background: linear-gradient(180deg, #000000 0%, #1D2B53 70%, #7E2553 100%); } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 4px #FFF1E8, 0 0 0 8px #000, 8px 8px 0 8px #000; }
+.card, .chip, .steps .st, .nametag { background: #000; color: #FFF1E8; border: none; border-radius: 0; box-shadow: var(--px), 8px 8px 0 4px #000; }
+.chip svg { color: #FFEC27; } .chip.dark { background: #7E2553; }
+.icon { background: #29ADFF; color: #000; border-radius: 0; }
+.kbd { background: #5F574F; color: #FFF1E8; border-radius: 0; border: none; box-shadow: 0 4px 0 #000; }
+.tag { background: #FF004D; color: #FFF1E8; border-radius: 0; } .tag .lic { color: #FFEC27; }
+.browser { border-radius: 0; border: none; box-shadow: 0 0 0 4px #FFF1E8, 8px 8px 0 4px #000; }
+.eyebrow { letter-spacing: .12em; }
+.scene h1 { font-size: 64px; line-height: 1.32; text-shadow: 6px 6px 0 #7E2553; }
+.card .title { font-size: 18px; line-height: 1.5; }
+.stat .num { font-size: 56px; } .steps h2 { font-size: 30px; line-height: 1.4; }
+.btn { border-radius: 0; } .btn.light { background: #FFEC27; color: #000; box-shadow: 0 6px 0 #AB5236; } .btn.glass { border: 4px solid #FFF1E8; }
+.nametag { background: #1D2B53; }
+.cap { font-size: 40px; } .cap .hl { border-radius: 0; }
+.spot, .spot .ring { border-radius: 0; } .spot .ring { border: 4px solid #FFEC27; box-shadow: 0 0 0 4px #000; } .spot .label { background: #FF004D; border-radius: 0; }
+.check { background: #00E436; color: #000; border-radius: 0; } .icon img { image-rendering: pixelated; }

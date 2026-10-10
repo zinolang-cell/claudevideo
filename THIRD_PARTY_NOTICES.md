@@ -11,6 +11,7 @@ When you use the skill, its scripts install or call the following third-party so
 | [Phosphor Icons](https://phosphoricons.com) | Icons in cards and chips | `npm install` (`@phosphor-icons/core`) | MIT |
 | [Simple Icons](https://simpleicons.org) | Fallback brand logos | `npm install` (`simple-icons`) | CC0-1.0 (the logos remain trademarks of their owners) |
 | [Fontsource](https://fontsource.org) font packages | Brand fonts | installed on demand by `brand_from_tokens.mjs` | per font, mostly SIL Open Font License 1.1 |
+| Fonts of the 20 animation-style presets: JetBrains Mono, Bangers, Comic Neue, Press Start 2P, Pixelify Sans, Outfit, Inter, Anton, Space Grotesk, Space Mono, Baloo 2, Archivo Black, Manrope, Fraunces, DM Sans, VT323, Sora, Jost, IBM Plex Mono, Poiret One | Typography of the styles | installed on demand from Fontsource by `style.mjs` | SIL Open Font License 1.1 |
 | [FFmpeg](https://ffmpeg.org) | Decoding, cutting, encoding, audio mix | installed by you | LGPL-2.1+, or GPL-2.0+ for builds with GPL parts such as libx264 |
 | [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | Speech-to-text with word timing | installed by you | MIT |
 | [Whisper](https://github.com/openai/whisper) model weights | Speech-to-text | downloaded by you | MIT |

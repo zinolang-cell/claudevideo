@@ -1,0 +1,29 @@
+/* 06 Kinetic Type: huge condensed type, black/white plus one signal colour. Word slams + outline marquee: fx/kinetic.js */
+@font-face { font-family: 'StyleDisplay'; src: url('/node_modules/@fontsource/anton/files/anton-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'StyleSans'; src: url('/node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: block; }
+:root {
+  --font: 'StyleSans', system-ui, sans-serif; --font-display: 'StyleDisplay', Impact, sans-serif; --font-title: 'StyleDisplay', Impact, sans-serif; --font-caption: 'StyleDisplay', Impact, sans-serif;
+  --ink: #0A0A0A; --ink-2: #1A1A1A; --muted: #5A5A5A;
+  --bg: #FFFFFF; --bg-soft: #F2F2EE; --bg-tint: #E8E8E2; --line: #DADAD2; --line-strong: #BDBDB3; --dot: #BDBDB3;
+  --accent: #FF3B1F; --accent-deep: #0A0A0A; --accent-soft: #FF3B1F; --accent-light: #FF3B1F; --hero: #0A0A0A;
+  --hl: #FF3B1F; --hl-ink: #FFFFFF; --scene-hl: #FF3B1F; --scene-hl-ink: #0A0A0A; --scene-soft: #FF3B1F;
+  --r-s: 0px; --r: 4px; --r-l: 6px;
+  --display-weight: 400; --display-tracking: 0em; --title-weight: 400; --ui-weight: 400; --wave-cut: #BDBDB3;
+}
+#bg-light { background: #F2F2EE; } #bg-light::after { display: none; }
+#bg-dark { background: #0A0A0A; } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 6px #FF3B1F; }
+.scene h1 { font-size: 158px; text-transform: uppercase; line-height: .9; }
+.scene h1 .line { overflow: visible; }
+.scene h1 .w { display: inline-block; margin-right: .18em; will-change: transform; }
+.cap { font-size: 48px; text-transform: uppercase; letter-spacing: .01em; } .cap .hl { border-radius: 0; }
+.card { border-radius: 4px; border: none; box-shadow: none; outline: 3px solid #0A0A0A; }
+.card .title { font-size: 36px; text-transform: uppercase; letter-spacing: .01em; }
+.chip { border-radius: 0; border: 3px solid #0A0A0A; box-shadow: none; text-transform: uppercase; font-weight: 800; }
+.chip.dark { background: #FF3B1F; border-color: #FF3B1F; } .chip.dark svg { color: #FFF; }
+.icon { background: #0A0A0A; color: #FFF; border-radius: 0; }
+.eyebrow { color: #FF3B1F; font-weight: 800; }
+.btn { border-radius: 0; text-transform: uppercase; font-family: var(--font-display); font-size: 24px; letter-spacing: .03em; } .btn.light { background: #FF3B1F; color: #FFF; }
+.tag { border-radius: 0; text-transform: uppercase; background: #0A0A0A; } .tag .lic { color: #FF3B1F; }
+.steps h2 { text-transform: uppercase; font-size: 54px; } .steps .st { border-radius: 0; }
+.spot .ring { border: 3px solid #FF3B1F; box-shadow: none; } .spot .label { background: #FF3B1F; border-radius: 0; text-transform: uppercase; }

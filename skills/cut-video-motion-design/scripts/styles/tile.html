@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>style tile</title>
+<!-- One sample scene in one animation style, rendered by style.mjs board.
+     /styles/tile.html?style=<id>&t=2.6&title=..&title2=..&eyebrow=..&lead=..&brand=..&who=..&role=..&caption=..&hl=3 -->
+<link rel="stylesheet" href="/compose/style.css">
+<link rel="stylesheet" id="style-css">
+<style>
+  #avatar { position: absolute; inset: 0; }
+  #avatar svg { width: 100%; height: 100%; display: block; }
+  .tile-chip { position: absolute; left: 900px; top: 800px; }
+  .tile-card { position: absolute; left: 1290px; top: 770px; width: max-content; max-width: 560px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg-light" style="opacity:0"></div>
+  <div id="bg-dark"></div>
+  <canvas id="fx-bg" width="1920" height="1080"></canvas>
+  <div class="scene" id="scene">
+    <div class="brandmark" style="left:80px;top:56px"><span id="brand"></span></div>
+    <div class="block" style="position:absolute;left:900px;top:240px;width:960px">
+      <div class="eyebrow" style="margin-bottom:26px"><span class="dash" style="width:22px"></span><span id="eyebrow"></span></div>
+      <h1><span class="line"><span id="l1"></span></span><span class="line"><span class="soft" id="l2"></span></span></h1>
+      <p class="lead" style="margin-top:28px" id="lead"></p>
+    </div>
+    <div class="nametag" style="left:300px;top:770px"><div><div class="who" id="who"></div><div class="role" id="role"></div></div></div>
+  </div>
+  <div id="cam" style="left:290px;top:220px;width:500px;height:500px">
+    <div id="avatar"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9E4DD"/><stop offset="1" stop-color="#B9B2A8"/></linearGradient></defs>
+      <rect width="100" height="100" fill="url(#g)"/><circle cx="50" cy="40" r="17" fill="#7C746B"/><path d="M14 100c2-22 17-33 36-33s34 11 36 33z" fill="#7C746B"/>
+    </svg></div>
+  </div>
+  <div class="chip tile-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg><span>No terminal needed</span></div>
+  <div class="card pad tile-card"><div class="row"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
+    <div><div class="eyebrow"><span class="dash" style="width:16px"></span>Free download</div><div class="title">Visual Studio Code</div><div class="sub">Install it in two minutes</div></div></div></div>
+  <div id="captions"><div class="cap" id="cap"><div class="hl" id="hl"></div></div></div>
+  <canvas id="fx-top" width="1920" height="1080"></canvas>
+</div>
+<script type="module">
+const q = new URLSearchParams(location.search);
+const id = q.get('style'), t = +(q.get('t') || 2.6);
+const $ = s => document.querySelector(s);
+const set = (sel, v) => { $(sel).textContent = v; };
+set('#l1', q.get('title') || 'Cut videos');
+set('#l2', q.get('title2') || 'with Claude Code.');
+set('#eyebrow', q.get('eyebrow') || 'Video tutorial');
+set('#lead', q.get('lead') || 'Pauses out. Captions in. Motion design on top.');
+set('#brand', q.get('brand') || 'yourbrand.com');
+set('#who', q.get('who') || 'Your Name');
+set('#role', q.get('role') || 'Creator · yourbrand.com');
+const css = $('#style-css');
+await new Promise(r => { css.onload = r; css.onerror = r; css.href = `/styles/${id}.css`; });
+await document.fonts.ready;
+
+// caption line in the scene colours, one highlighted word
+const CSSV = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const cap = $('#cap'), hl = $('#hl');
+const words = (q.get('caption') || 'and I explain to you today how').split(' '), hi = +(q.get('hl') || 4);
+const spans = words.map(w => { const s = document.createElement('span'); s.className = 'w'; s.textContent = w; cap.append(s, document.createTextNode(' ')); return s; });
+cap.style.color = CSSV('--cap-scene-ink') || CSSV('--scene-ink') || '#fff';
+spans.forEach((s, i) => { s.style.opacity = i <= hi ? 1 : .38; if (i === hi) s.style.color = CSSV('--scene-hl-ink') || '#fff'; });
+cap.style.transform = `translate(${-cap.offsetWidth / 2}px, 0)`;
+const w = spans[hi];
+Object.assign(hl.style, { left: w.offsetLeft - 9 + 'px', width: w.offsetWidth + 18 + 'px', background: CSSV('--scene-hl') || CSSV('--accent') });
+
+// the style's animation module, frozen at time t
+function bezier(x1, y1, x2, y2) { const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = u => ((ax * u + bx) * u + cx) * u, sy = u => ((ay * u + by) * u + cy) * u;
+  return x => { if (x <= 0) return 0; if (x >= 1) return 1; let lo = 0, hi2 = 1, u = x; for (let i = 0; i < 40; i++) { const v = sx(u); if (Math.abs(v - x) < 1e-7) break; if (v < x) lo = u; else hi2 = u; u = (lo + hi2) / 2; } return sy(u); }; }
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), prog = (x, x0, d) => d <= 0 ? (x >= x0 ? 1 : 0) : clamp((x - x0) / d), lerp = (a, b, p) => a + (b - a) * p;
+const helpers = { EO: bezier(.16, 1, .3, 1), EIO: bezier(.65, 0, .35, 1), EBACK: bezier(.34, 1.4, .64, 1), clamp, prog, lerp, CSSV, rgbOf: () => [0, 0, 0] };
+const S = { layout: { camIntro: { cx: 540, cy: 470, r: 250 }, camMain: { cx: 1567, cy: 800, r: 128 }, plate: { x: 200, y: 60, w: 1520, h: 897 } }, introEnd: 99, outroStart: 1e9, chapters: [] };
+let fx = null;
+try { fx = await import(`/styles/fx/${id}.js`); } catch {}
+await fx?.init?.({ bg: $('#fx-bg'), top: $('#fx-top'), W: 1920, H: 1080, S, helpers });
+fx?.frame?.(t, { k: 0, bk: 0, ko: 0, intro: true, chapter: { title: q.get('chapter') || 'Motion design' } });
+fx?.title?.({ r: $('#scene'), h1: $('#scene h1') }, t, 0);
+// same rule as the compositor: one line per headline line, shrink the font until the widest line fits the block
+const h1 = $('#scene h1'), blockW = 960;
+const widest = Math.max(...[...h1.querySelectorAll('.line > span')].map(l => l.scrollWidth));
+if (widest > blockW) h1.style.fontSize = parseFloat(getComputedStyle(h1).fontSize) * blockW / widest * .98 + 'px';
+window.tileReady = true;
+</script>
+</body>
+</html>

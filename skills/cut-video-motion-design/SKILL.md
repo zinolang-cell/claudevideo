@@ -1,6 +1,6 @@
 ---
 name: cut-video-motion-design
-description: Turn a raw screen recording, tutorial or talking-head video into a finished, branded edit without Hyperframes or Remotion. Whisper transcribes it with word timing, pauses are cut out automatically, captions animate word by word, and zooms, spotlights, motion-design cards and transitions are added. Playwright captures website screenshots as B-roll and as the style reference, and everything renders frame-exact with Playwright + ffmpeg, with sound effects. Use this whenever someone wants to cut, trim, edit, caption or subtitle a recording (mp4/mov/webm), remove pauses or filler, add motion graphics or nice transitions, make a YouTube/LinkedIn/tutorial video look professional, match their brand or website style, or show screenshots of websites in a video, even if they only say "cut my video" or "@recording.mp4 make this nice".
+description: Turn a raw screen recording, tutorial or talking-head video into a finished, branded edit without Hyperframes or Remotion. Whisper transcribes it with word timing, pauses are cut out automatically, captions animate word by word, and zooms, spotlights, motion-design cards and transitions are added. The look comes from one of 20 animation styles (ASCII Art, Comic, Pixel Art, Liquid Morph, Glassmorphism, Kinetic Type, Wireframe 3D, Split-Flap, Clay 3D, Halftone, Isometric, Paper Cut, Retro VHS, Topo Lines, Bauhaus, Blueprint, Art Deco, Terminal, Neo-Brutalism, Particles) shown to the user as a rendered board, and/or from a reference website captured with Playwright. Website screenshots also appear as B-roll, and everything renders frame-exact with Playwright + ffmpeg, with sound effects. Use this whenever someone wants to cut, trim, edit, caption or subtitle a recording (mp4/mov/webm), remove pauses or filler, add motion graphics, animation styles or nice transitions, make a YouTube/LinkedIn/tutorial video look professional, match their brand or website style, or show screenshots of websites in a video, even if they only say "cut my video" or "@recording.mp4 make this nice".
 ---
 
 # Cut a video with captions, motion design and a website-based style
@@ -12,7 +12,7 @@ This skill turns a raw recording into an edited video:
 - zooms and spotlights point at what is being clicked
 - motion-design cards explain each step
 - website screenshots appear as B-roll
-- the intro and outro use the look of a reference website or a chosen style
+- the intro and outro use one of 20 animation styles (ASCII Art to Particles), the look of a reference website, or both
 
 Everything runs locally with **Node + Playwright + ffmpeg + Whisper**. Don't swap in Hyperframes, Remotion or another video framework. The point of this pipeline is that it needs no framework, account, licence or credits, and every frame is a pure function of time, so any frame can be previewed or re-rendered on its own.
 
@@ -28,19 +28,24 @@ recording.mp4
          └─> compose/ (HTML/CSS page, renderFrame(t)) ──> Playwright screenshots per frame ──> ffmpeg H.264 + SFX mix
 ```
 
-## Before you start: two steps, in this order
+## Before you start: three steps, in this order
 
 **1. Search the web for open-source assets.** Do this before touching the video. Licences and sources change, and every video needs different logos and visuals. Search the web (in Claude Code with WebSearch and WebFetch; in Codex with its web search) for each category in [references/asset-sources.md](references/asset-sources.md): logos, icons, emoji, motion graphics (Lottie), sound effects, music, stock video/photos and fonts. Start from the sources listed there, confirm the licence page still says what the reference says, and look for anything newer or better suited to the topic. Download what you will use into `assets/` inside the project. Record every file in `assets/ledger.json` with source URL, licence and date; it becomes the credits list at delivery. Once the transcript exists (step 2 of the pipeline), do a second, targeted pass for the products, tools and brands that are actually named in the recording.
 
 Prefer licences that need no attribution and allow commercial use: CC0, MIT, Apache-2.0, ISC, OFL, or the Pexels, Pixabay and Lottie Simple licences. Skip NC, ND and SA licences, and anything "editorial only". Logos are trademarks whatever the file licence says. Show them unmodified, only to name the product, and never in a way that suggests a partnership.
 
-**2. Ask the user whether to reference a style or a website.** Ask a multiple-choice question (AskUserQuestion in Claude Code). The answer decides the whole look, so wait for it before designing anything. Offer:
+**2. Set up the project** (the [Setup](#setup) section below). The style board in step 3 needs Playwright and the fonts.
 
-- **A website**: they paste a URL (often their own). You capture it with Playwright and derive fonts, colours, radius, easing and type style from it.
-- **A style**: they describe it ("calm and minimal", "bold tech", "editorial") or pick a preset (`clean`, `editorial`, `bold`, `calm`).
-- **No reference**: a neutral, clean default.
+**3. Show the 20 animation styles and ask.** The answer decides the whole look, so ask before designing anything:
 
-The same question can collect anything else you can't infer: caption language, aspect ratio, and whether they want an intro/outro card. The compositor is laid out for 16:9 at 1920×1080. For 9:16, set `size: [1080, 1920]` and adapt these by hand:
+1. **Render the board** with the video's own headline: `node style.mjs board --title "<line 1>" --title2 "<line 2>" --eyebrow "<kicker>" --who "<speaker>" --role "<role>"`. It takes about 10 seconds. It writes `build/styles/board.png` (all 20, numbered) and one full-size example per style.
+2. **Show it.** Give the user the path to `board.png` and open it if you can. The styles are: 01 ASCII Art, 02 Comic, 03 Pixel Art, 04 Liquid Morph, 05 Glassmorphism, 06 Kinetic Type, 07 Wireframe 3D, 08 Split-Flap, 09 Clay 3D, 10 Halftone, 11 Isometric, 12 Paper Cut, 13 Retro VHS, 14 Topo Lines, 15 Bauhaus, 16 Blueprint, 17 Art Deco, 18 Terminal, 19 Neo-Brutalism, 20 Particles.
+3. **Ask two multiple-choice questions** (AskUserQuestion in Claude Code):
+   - **Which style?** Offer your 2–3 best matches for this content (see [references/styles.md](references/styles.md)) plus "No preset, clean look". Any number from 1 to 20 is fine as a free-text answer.
+   - **Should a website be referenced?** Offer: "Yes, my website (paste the URL)", "No, pure style", or "Style plus my brand colours only". A referenced website supplies fonts, colours, logo and radius, captured with Playwright.
+4. **Apply it** with `node style.mjs use <n>` (and `brand.css` per section 5 of the pipeline). Show the user preview stills of the intro, one main-layout moment and the outro before going on.
+
+The same question round can collect anything else you can't infer: caption language, aspect ratio, and whether they want an intro/outro card. The compositor is laid out for 16:9 at 1920×1080. For 9:16, set `size: [1080, 1920]` and adapt these by hand:
 
 - `layout.plate` in the timeline
 - `#captions { top }` and `#header` in `compose/style.css`
@@ -92,7 +97,7 @@ Run `node cut_media.mjs`. ffmpeg selects the kept frames by index and writes the
 
      `brand.css` is plain CSS loaded last, so append overrides for patterns the variables can't express: chunky 3D buttons with a darker bottom border, a warm paper background, a logo tile on dark scenes.
   4. For a clean intro/outro background, capture the hero again with its text hidden: `--hide "h1, header, nav, .hero p" --prefix hero-clean- --dsf 1`.
-- **Style reference:** run `node brand_from_tokens.mjs --preset clean|editorial|bold|calm`, or edit `build/brand.css` by hand from the user's description. Every visual decision is a CSS variable.
+- **Animation style:** `node style.mjs use <n>` writes `build/style.css`, plus `build/style.js` for the style's animated background and headline effect. `build/brand.css` loads after it, so keep only the brand variables there that should tint the style ([references/styles.md](references/styles.md) section 4). For a described style that isn't one of the 20, use `brand_from_tokens.mjs --preset clean|editorial|bold|calm` or write a new preset (styles.md section 5).
 - **B-roll:** capture every site the speaker mentions (stock sites, tools, docs) with `node capture_site.mjs <url> build/sites/<name> --no-tokens --sections 0 --width 1600 --height 1000 --dsf 1.5`. Check each capture: reveal-on-scroll pages can come out blank in full-page shots, and section shots are often more reliable. Stack several sections with ffmpeg `vstack` for a scrolling shot.
 
 More options and pitfalls are in [references/playwright-capture.md](references/playwright-capture.md).
@@ -145,6 +150,8 @@ As a reference, a 20-thread CPU renders 1080p at about 40–60 frames per second
 | `scripts/cut_media.mjs` | Frame-exact screen/webcam JPEG layers + voice track |
 | `scripts/capture_site.mjs` | Playwright: screenshots, sections, design tokens, logo candidates |
 | `scripts/brand_from_tokens.mjs` | tokens.json or a preset → `build/brand.css` (font via Fontsource) |
+| `scripts/style.mjs` | The 20 animation styles: `list`, `board` (numbered examples), `use <n>`, `clear` |
+| `scripts/styles/` | Style presets: `<id>.css`, `fx/<id>.js` animation modules, `styles.json`, `tile.html` |
 | `scripts/render.mjs` | Score builder, preview/sheet/range/full render, audio mix |
 | `scripts/compose/` | The compositor page: `index.html`, `style.css`, `compose.js` (`renderFrame(t)`) |
 | `scripts/templates/` | `project.example.json`, `timeline.example.mjs` |
@@ -154,3 +161,4 @@ As a reference, a 20-thread CPU renders 1080p at about 40–60 frames per second
 | `references/timeline.md` | `project.json` and `timeline.mjs` reference |
 | `references/design.md` | Motion design rules: captions, cards, zooms, transitions, timing |
 | `references/troubleshooting.md` | Known problems and fixes (ffmpeg versions, colour, speed, fonts) |
+| `references/styles.md` | The 20 styles, how to ask and recommend, combining with a brand, writing new styles |

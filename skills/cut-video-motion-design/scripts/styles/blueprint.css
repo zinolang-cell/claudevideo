@@ -1,0 +1,30 @@
+/* 16 Blueprint: blueprint-blue grid, white line work, mono labels. Self-drawing technical lines: fx/blueprint.js */
+@font-face { font-family: 'StyleMono'; src: url('/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2') format('woff2'); font-weight: 100 500; font-display: block; }
+@font-face { font-family: 'StyleMono'; src: url('/node_modules/@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-600-normal.woff2') format('woff2'); font-weight: 600 900; font-display: block; }
+:root {
+  --font: 'StyleMono', monospace;
+  --ink: #FFFFFF; --ink-2: #E8F0FF; --muted: #A9C4F0;
+  --bg: #0B3D91; --bg-soft: #0A3683; --bg-tint: #0D47A8; --line: #4F78C0; --line-strong: #7FA0D8; --dot: #5C86CC;
+  --accent: #FFFFFF; --accent-deep: #072A66; --accent-soft: #1A56B8; --accent-light: #BFD7FF; --hero: #0A3683;
+  --hl: #FFFFFF; --hl-ink: #0B3D91; --scene-hl: #FFFFFF; --scene-hl-ink: #0B3D91;
+  --r-s: 0px; --r: 0px; --r-l: 0px; --shadow-1: none; --shadow-2: none; --shadow-3: 0 0 0 10px rgba(255,255,255,.06);
+  --display-weight: 600; --display-tracking: -.01em; --title-weight: 600; --ui-weight: 500; --wave-cut: #5C86CC;
+  --grid: linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px) 0 0/20px 20px, linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px) 0 0/20px 20px,
+          linear-gradient(rgba(255,255,255,.17) 1px, transparent 1px) 0 0/100px 100px, linear-gradient(90deg, rgba(255,255,255,.17) 1px, transparent 1px) 0 0/100px 100px;
+}
+#bg-light { background: var(--grid), #0B3D91; } #bg-light::after { display: none; }
+#bg-dark { background: var(--grid), #0A3683; } #bg-dark::after { display: none; }
+#plate { border: 1.5px solid #FFF; }
+#cam { box-shadow: 0 0 0 2px #FFF, 0 0 0 10px rgba(255,255,255,.08); }
+.card, .chip, .steps .st, .nametag, .browser .bar { background: rgba(11,61,145,.94); border: 1.5px solid #FFF; color: #FFF; }
+.card .sub, .list .li .meta { color: #A9C4F0; }
+.icon { background: transparent; border: 1.5px solid #FFF; color: #FFF; border-radius: 0; }
+.kbd { background: transparent; border: 1.5px solid #FFF; color: #FFF; border-radius: 0; }
+.chip { border-radius: 0; } .chip svg { color: #FFF; } .chip.dark { background: #FFF; color: #0B3D91; } .chip.dark svg { color: #0B3D91; }
+.scene h1 { text-transform: uppercase; font-size: 94px; letter-spacing: .02em; }
+.scene h1 .soft { color: transparent; -webkit-text-stroke: 1.5px #FFF; }
+.btn { border-radius: 0; } .btn.light { background: #FFF; color: #0B3D91; } .btn.glass { border: 1.5px dashed #FFF; }
+.tag { background: #FFF; color: #0B3D91; border-radius: 0; } .tag .lic { color: #0B3D91; }
+.cap { text-transform: uppercase; font-size: 32px; letter-spacing: .02em; } .cap .hl { border-radius: 0; }
+.spot, .spot .ring { border-radius: 0; } .spot .ring { border: 1.5px dashed #FFF; box-shadow: none; } .spot .label { background: #FFF; color: #0B3D91; border-radius: 0; }
+.list .li { border-color: rgba(255,255,255,.3); } .check { background: #FFF; color: #0B3D91; border-radius: 0; }

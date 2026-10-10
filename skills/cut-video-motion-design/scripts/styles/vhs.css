@@ -1,0 +1,28 @@
+/* 13 Retro VHS: chromatic aberration, scanlines, VCR on-screen display. Tape noise + OSD: fx/vhs.js */
+@font-face { font-family: 'StyleVCR'; src: url('/node_modules/@fontsource/vt323/files/vt323-latin-400-normal.woff2') format('woff2'); font-weight: 100 900; font-display: block; }
+:root {
+  --font: 'StyleVCR', monospace;
+  --ink: #F4EFFF; --ink-2: #E3DCF5; --muted: #A69CC4;
+  --bg: #15111F; --bg-soft: #100D18; --bg-tint: #1C1729; --line: #2D2640; --line-strong: #43395E; --dot: #43395E;
+  --accent: #FF2D6F; --accent-deep: #3A0F2A; --accent-soft: #2A1530; --accent-light: #00E5FF; --hero: #0B0912;
+  --hl: #FF2D6F; --hl-ink: #FFFFFF; --scene-hl: #FF2D6F; --scene-hl-ink: #FFFFFF; --scene-soft: #00E5FF;
+  --r-s: 0px; --r: 2px; --r-l: 4px;
+  --shadow-1: none; --shadow-2: 0 0 0 1px #43395E; --shadow-3: 0 0 0 1px #43395E, 0 30px 80px rgba(0,0,0,.6);
+  --display-weight: 400; --display-tracking: .02em; --title-weight: 400; --ui-weight: 400; --wave-cut: #43395E;
+}
+#bg-light { background: radial-gradient(1200px 700px at 50% 30%, #1E1630, #0B0912); } #bg-light::after { display: none; }
+#bg-dark { background: linear-gradient(180deg, #0B0912 0%, #24113A 60%, #3B0F3F 100%); } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 3px #F4EFFF, 0 0 26px rgba(255,45,111,.6); }
+.scene h1 { font-size: 138px; text-transform: uppercase; line-height: .92; text-shadow: 3px 0 0 rgba(255,45,111,.85), -3px 0 0 rgba(0,229,255,.85); }
+.eyebrow { font-size: 22px; color: #00E5FF; letter-spacing: .14em; }
+.scene p.lead { font-size: 30px; }
+.cap { font-size: 48px; text-transform: uppercase; text-shadow: 2px 0 rgba(255,45,111,.7), -2px 0 rgba(0,229,255,.7); } .cap .hl { border-radius: 0; }
+.card, .chip, .steps .st, .nametag, .browser { background: rgba(16,13,24,.94); border: 1px solid #43395E; color: var(--ink); border-radius: 2px; }
+.card .title { font-size: 34px; text-transform: uppercase; } .card .sub { font-size: 21px; }
+.chip { font-size: 26px; text-transform: uppercase; } .chip.dark { background: #FF2D6F; color: #FFF; }
+.icon { background: #2A1530; color: #FF2D6F; border-radius: 0; }
+.kbd { background: #1C1729; color: #F4EFFF; border: 1px solid #43395E; border-radius: 0; font-size: 24px; }
+.btn { border-radius: 0; font-size: 28px; text-transform: uppercase; } .btn.light { background: #FF2D6F; color: #FFF; }
+.tag { border-radius: 0; background: #FF2D6F; font-size: 22px; } .tag .lic { color: #FFF; }
+.list .li { font-size: 24px; } .steps .st .t { font-size: 28px; }
+.spot, .spot .ring { border-radius: 0; } .spot .ring { border: 2px solid #FF2D6F; box-shadow: 0 0 0 3px rgba(0,229,255,.35); } .spot .label { background: #FF2D6F; border-radius: 0; font-size: 22px; }

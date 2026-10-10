@@ -4,12 +4,16 @@
 <meta charset="utf-8">
 <title>compose</title>
 <link rel="stylesheet" href="/compose/style.css">
+<!-- animation style preset (node style.mjs use <n>) -->
+<link rel="stylesheet" href="/build/style.css">
+<!-- brand overrides (brand_from_tokens.mjs or hand-written): colours, fonts, logo -->
 <link rel="stylesheet" href="/build/brand.css">
 </head>
 <body>
 <div id="stage">
   <div id="bg-light"></div>
   <div id="bg-dark"><img alt=""></div>
+  <canvas id="fx-bg" width="1920" height="1080"></canvas>
   <div id="plate">
     <div id="cam-space"><canvas id="scr"></canvas></div>
     <div id="plate-dim"></div>
@@ -21,6 +25,7 @@
   <div id="cam"><canvas id="camcv" style="position:absolute"></canvas></div>
   <div id="header"><div id="chapter"></div><div id="dots"></div></div>
   <div id="captions"></div>
+  <canvas id="fx-top" width="1920" height="1080"></canvas>
   <div id="fade" style="position:absolute;inset:0;background:#05070a;opacity:0"></div>
 </div>
 <script type="module" src="/compose/compose.js"></script>

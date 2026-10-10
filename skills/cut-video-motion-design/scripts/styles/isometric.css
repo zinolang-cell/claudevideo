@@ -1,0 +1,23 @@
+/* 11 Isometric: isometric grid, extruded cards, cool blues. Floating blocks: fx/isometric.js */
+@font-face { font-family: 'StyleSans'; src: url('/node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2') format('woff2'); font-weight: 200 800; font-display: block; }
+:root {
+  --font: 'StyleSans', system-ui, sans-serif;
+  --ink: #1E2A3A; --ink-2: #2B3A4F; --muted: #6B7A90;
+  --bg: #FFFFFF; --bg-soft: #EEF2F7; --bg-tint: #E3EAF3; --line: #D5DEEA; --line-strong: #B9C6D8; --dot: #B9C6D8;
+  --accent: #3A86FF; --accent-deep: #1E2A3A; --accent-soft: #DCE9FF; --accent-light: #8EC5FF; --hero: #EEF2F7;
+  --scene-ink: #1E2A3A; --scene-soft: #3A86FF; --scene-lead: #4A5A70; --scene-hl: #3A86FF; --scene-hl-ink: #FFFFFF; --scene-line: #B9C6D8; --scene-tag-bg: #FFFFFF;
+  --r-s: 8px; --r: 10px; --r-l: 14px;
+  --iso: 1px 1px 0 #B9C6D8, 2px 2px 0 #B9C6D8, 3px 3px 0 #B9C6D8, 4px 4px 0 #B9C6D8, 5px 5px 0 #B9C6D8, 6px 6px 0 #A9B8CC, 7px 7px 0 #A9B8CC, 8px 8px 0 #A9B8CC, 16px 20px 26px rgba(30,42,58,.18);
+  --shadow-1: var(--iso); --shadow-2: var(--iso);
+  --shadow-3: 2px 2px 0 #9FB0C6, 4px 4px 0 #9FB0C6, 6px 6px 0 #9FB0C6, 8px 8px 0 #9FB0C6, 10px 10px 0 #8FA2BA, 12px 12px 0 #8FA2BA, 30px 40px 60px rgba(30,42,58,.22);
+  --display-weight: 800; --display-tracking: -.035em; --title-weight: 700; --ui-weight: 700; --wave-cut: #B9C6D8;
+  --iso-grid: repeating-linear-gradient(30deg, rgba(58,134,255,.11) 0 1px, transparent 1px 46px), repeating-linear-gradient(150deg, rgba(58,134,255,.11) 0 1px, transparent 1px 46px);
+}
+#bg-light { background: var(--iso-grid), #EEF2F7; } #bg-light::after { display: none; }
+#bg-dark { background: var(--iso-grid), linear-gradient(180deg, #F4F7FB, #E3EAF3); } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 6px #FFF, 8px 10px 0 6px #B9C6D8, 20px 28px 40px rgba(30,42,58,.2); }
+.card, .chip, .steps .st, .nametag { border: 1px solid #D5DEEA; }
+.chip.dark { background: #1E2A3A; } .chip.dark svg { color: #8EC5FF; }
+.btn.light { background: #3A86FF; color: #FFF; box-shadow: 4px 4px 0 #1E5BBF; } .btn.glass { border: 1px solid #1E2A3A; color: #1E2A3A; }
+.tag { background: #1E2A3A; } .tag .lic { color: #8EC5FF; }
+.spot .ring { border-color: #FFF; box-shadow: 0 0 0 5px rgba(58,134,255,.55), 0 0 30px 6px rgba(58,134,255,.35); } .spot .label { background: #3A86FF; }

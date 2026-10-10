@@ -1,0 +1,30 @@
+/* 17 Art Deco: black and gold, sunbursts, framed geometric type. Rays + shine: fx/artdeco.js */
+@font-face { font-family: 'StyleDeco'; src: url('/node_modules/@fontsource/poiret-one/files/poiret-one-latin-400-normal.woff2') format('woff2'); font-weight: 100 900; font-display: block; }
+@font-face { font-family: 'StyleGeo'; src: url('/node_modules/@fontsource-variable/jost/files/jost-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: block; }
+:root {
+  --font: 'StyleGeo', system-ui, sans-serif; --font-display: 'StyleDeco', serif; --font-title: 'StyleDeco', serif;
+  --ink: #F5E6C8; --ink-2: #EAD9B5; --muted: #B8A57E;
+  --bg: #121110; --bg-soft: #0B0B0B; --bg-tint: #1A1814; --line: #3A3223; --line-strong: #6B5A35; --dot: #6B5A35;
+  --accent: #D4AF37; --accent-deep: #0B0B0B; --accent-soft: #2A2416; --accent-light: #D4AF37; --hero: #0B0B0B;
+  --hl: #D4AF37; --hl-ink: #0B0B0B; --scene-hl: #D4AF37; --scene-hl-ink: #0B0B0B;
+  --r-s: 0px; --r: 0px; --r-l: 0px;
+  --shadow-1: none; --shadow-2: 0 0 0 1px #6B5A35; --shadow-3: 0 0 0 1px #D4AF37, 0 0 0 7px #0B0B0B, 0 0 0 8px #6B5A35;
+  --display-weight: 400; --display-tracking: .1em; --title-weight: 400; --ui-weight: 500; --wave-cut: #6B5A35;
+  --fx-shine: 45%;
+}
+#bg-light { background: #0B0B0B; } #bg-light::after { display: none; }
+#bg-dark { background: radial-gradient(1200px 800px at 50% 110%, #2A2214, #0B0B0B 60%); } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 2px #D4AF37, 0 0 0 10px #0B0B0B, 0 0 0 11px #6B5A35; }
+.scene h1 { text-transform: uppercase; font-size: 100px; line-height: 1.12; }
+.scene h1 .line > span { background: linear-gradient(100deg, #A67C2E 0%, #F7E7A1 var(--fx-shine), #A67C2E 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.eyebrow { letter-spacing: .32em; }
+.card, .chip, .steps .st, .nametag, .browser { background: #0E0D0B; border: 1px solid #D4AF37; outline: 1px solid #6B5A35; outline-offset: 4px; color: var(--ink); }
+.card .title { text-transform: uppercase; letter-spacing: .1em; font-size: 26px; }
+.chip { border-radius: 0; text-transform: uppercase; letter-spacing: .12em; font-size: 15px; } .chip svg { color: #D4AF37; }
+.icon { background: transparent; border: 1px solid #D4AF37; color: #D4AF37; border-radius: 0; }
+.kbd { background: transparent; border: 1px solid #D4AF37; color: #F5E6C8; border-radius: 0; }
+.btn { border-radius: 0; text-transform: uppercase; letter-spacing: .2em; } .btn.light { background: #D4AF37; color: #0B0B0B; } .btn.glass { border: 1px solid #D4AF37; color: #F5E6C8; }
+.tag { background: #0B0B0B; border: 1px solid #D4AF37; border-radius: 0; } .tag .lic { color: #D4AF37; }
+.cap { text-transform: uppercase; letter-spacing: .06em; font-size: 34px; } .cap .hl { border-radius: 0; }
+.spot, .spot .ring { border-radius: 0; } .spot .ring { border: 1px solid #D4AF37; box-shadow: 0 0 0 5px rgba(212,175,55,.2); } .spot .label { background: #D4AF37; color: #0B0B0B; border-radius: 0; }
+.list .li { border-color: #3A3223; } .check { background: #D4AF37; color: #0B0B0B; }

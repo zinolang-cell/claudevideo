@@ -1,0 +1,230 @@
+[
+  {
+    "n": 1,
+    "id": "ascii",
+    "name": "ASCII Art",
+    "look": "Monochrome glyph fields on black, mono type, inverted highlights",
+    "motion": "A living field of ASCII characters ripples behind everything",
+    "goodFor": "developer tools, hacker culture, AI topics",
+    "fonts": [
+      "@fontsource-variable/jetbrains-mono"
+    ]
+  },
+  {
+    "n": 2,
+    "id": "comic",
+    "name": "Comic",
+    "look": "Bold outlines, halftone dots, speech-bubble captions, primary colours",
+    "motion": "Rotating sunburst, pop-in panels",
+    "goodFor": "playful explainers, kids and education, social clips",
+    "fonts": [
+      "@fontsource/bangers",
+      "@fontsource/comic-neue"
+    ]
+  },
+  {
+    "n": 3,
+    "id": "pixel",
+    "name": "Pixel Art",
+    "look": "8-bit palette, pixel font, notched pixel borders",
+    "motion": "Twinkling pixel stars and a scrolling pixel skyline",
+    "goodFor": "gaming, retro tech, fun tutorials",
+    "fonts": [
+      "@fontsource/press-start-2p",
+      "@fontsource-variable/pixelify-sans"
+    ]
+  },
+  {
+    "n": 4,
+    "id": "liquid",
+    "name": "Liquid Morph",
+    "look": "Vivid gradient blobs, rounded cards, gradient headlines",
+    "motion": "Blobs flow and merge like liquid",
+    "goodFor": "creative brands, product launches, music",
+    "fonts": [
+      "@fontsource-variable/outfit"
+    ]
+  },
+  {
+    "n": 5,
+    "id": "glass",
+    "name": "Glassmorphism",
+    "look": "Frosted glass cards over a vivid gradient",
+    "motion": "Soft colour light drifting behind the glass",
+    "goodFor": "apps, SaaS, modern UI tutorials",
+    "fonts": [
+      "@fontsource-variable/inter"
+    ]
+  },
+  {
+    "n": 6,
+    "id": "kinetic",
+    "name": "Kinetic Type",
+    "look": "Huge condensed type, black and white plus one signal colour",
+    "motion": "Words slam in one by one, giant outline type scrolls behind",
+    "goodFor": "punchy statements, ads, talks",
+    "fonts": [
+      "@fontsource/anton",
+      "@fontsource-variable/inter"
+    ]
+  },
+  {
+    "n": 7,
+    "id": "wireframe",
+    "name": "Wireframe 3D",
+    "look": "Neon cyan lines on near-black, outline type",
+    "motion": "Rotating wireframe solid over a scrolling perspective grid",
+    "goodFor": "tech, engineering, 3D, futuristic topics",
+    "fonts": [
+      "@fontsource-variable/space-grotesk",
+      "@fontsource-variable/jetbrains-mono"
+    ]
+  },
+  {
+    "n": 8,
+    "id": "splitflap",
+    "name": "Split-Flap",
+    "look": "Airport departure board: dark flap tiles, yellow and white letters",
+    "motion": "Headline letters flip through the alphabet and land",
+    "goodFor": "announcements, travel, countdowns, lists",
+    "fonts": [
+      "@fontsource/space-mono"
+    ]
+  },
+  {
+    "n": 9,
+    "id": "clay",
+    "name": "Clay 3D",
+    "look": "Soft pastel clay surfaces, chunky rounded type",
+    "motion": "Clay spheres and pills float and bob",
+    "goodFor": "friendly education, onboarding, consumer apps",
+    "fonts": [
+      "@fontsource-variable/baloo-2"
+    ]
+  },
+  {
+    "n": 10,
+    "id": "halftone",
+    "name": "Halftone",
+    "look": "Newsprint, CMYK dots, misregistered print type",
+    "motion": "Halftone dot waves pulse across the page",
+    "goodFor": "editorial, news, pop-art, design topics",
+    "fonts": [
+      "@fontsource/archivo-black",
+      "@fontsource-variable/inter"
+    ]
+  },
+  {
+    "n": 11,
+    "id": "isometric",
+    "name": "Isometric",
+    "look": "Isometric grid, extruded cards, cool blues",
+    "motion": "Isometric blocks float and stack",
+    "goodFor": "architecture, systems, data, infrastructure",
+    "fonts": [
+      "@fontsource-variable/manrope"
+    ]
+  },
+  {
+    "n": 12,
+    "id": "papercut",
+    "name": "Paper Cut",
+    "look": "Layered paper with soft shadows, warm serif headlines",
+    "motion": "Paper hills sway in layers",
+    "goodFor": "storytelling, education, crafts, nature",
+    "fonts": [
+      "@fontsource-variable/fraunces",
+      "@fontsource-variable/dm-sans"
+    ]
+  },
+  {
+    "n": 13,
+    "id": "vhs",
+    "name": "Retro VHS",
+    "look": "Chromatic aberration, scanlines, VCR on-screen display",
+    "motion": "Tape noise, tracking band, blinking PLAY",
+    "goodFor": "nostalgia, music, 80s/90s, creators",
+    "fonts": [
+      "@fontsource/vt323"
+    ]
+  },
+  {
+    "n": 14,
+    "id": "topo",
+    "name": "Topo Lines",
+    "look": "Topographic contour lines, earthy greens",
+    "motion": "Contour lines flow like a living map",
+    "goodFor": "outdoor, data, strategy, calm explainers",
+    "fonts": [
+      "@fontsource-variable/sora"
+    ]
+  },
+  {
+    "n": 15,
+    "id": "bauhaus",
+    "name": "Bauhaus",
+    "look": "Primary colours, circles and squares, geometric type",
+    "motion": "Geometric shapes rotate and slide",
+    "goodFor": "design, art, architecture, bold brands",
+    "fonts": [
+      "@fontsource-variable/jost"
+    ]
+  },
+  {
+    "n": 16,
+    "id": "blueprint",
+    "name": "Blueprint",
+    "look": "Blueprint blue grid, white line work, mono labels",
+    "motion": "Technical drawing and dimension lines draw themselves",
+    "goodFor": "engineering, how-it-works, planning, hardware",
+    "fonts": [
+      "@fontsource/ibm-plex-mono"
+    ]
+  },
+  {
+    "n": 17,
+    "id": "artdeco",
+    "name": "Art Deco",
+    "look": "Black and gold, sunbursts, framed geometric type",
+    "motion": "Sunburst rays turn, gold shine sweeps the headline",
+    "goodFor": "premium, luxury, events, finance",
+    "fonts": [
+      "@fontsource/poiret-one",
+      "@fontsource-variable/jost"
+    ]
+  },
+  {
+    "n": 18,
+    "id": "terminal",
+    "name": "Terminal",
+    "look": "Green CRT text on black, terminal windows",
+    "motion": "Headline types itself, log lines scroll, cursor blinks",
+    "goodFor": "coding, CLI tools, AI agents, security",
+    "fonts": [
+      "@fontsource-variable/jetbrains-mono"
+    ]
+  },
+  {
+    "n": 19,
+    "id": "neobrutal",
+    "name": "Neo-Brutalism",
+    "look": "Flat loud colours, thick black borders, hard shadows",
+    "motion": "Stickers spin and bounce",
+    "goodFor": "startups, creators, bold tutorials",
+    "fonts": [
+      "@fontsource/archivo-black",
+      "@fontsource-variable/space-grotesk"
+    ]
+  },
+  {
+    "n": 20,
+    "id": "particles",
+    "name": "Particles",
+    "look": "Deep space, light airy type, glowing dots",
+    "motion": "Thousands of particles orbit in a galaxy swirl",
+    "goodFor": "AI, science, keynotes, premium intros",
+    "fonts": [
+      "@fontsource-variable/manrope"
+    ]
+  }
+]

@@ -1,0 +1,33 @@
+/* 08 Split-Flap: airport departure board. Headline letters flip and land: fx/splitflap.js */
+@font-face { font-family: 'StyleMono'; src: url('/node_modules/@fontsource/space-mono/files/space-mono-latin-700-normal.woff2') format('woff2'); font-weight: 600 900; font-display: block; }
+@font-face { font-family: 'StyleMono'; src: url('/node_modules/@fontsource/space-mono/files/space-mono-latin-400-normal.woff2') format('woff2'); font-weight: 100 500; font-display: block; }
+:root {
+  --font: 'StyleMono', monospace;
+  --ink: #F2F2F2; --ink-2: #E0E0E0; --muted: #9A9A9A;
+  --bg: #1E1E1E; --bg-soft: #141414; --bg-tint: #232323; --line: #2E2E2E; --line-strong: #444444; --dot: #444444;
+  --accent: #FFD400; --accent-deep: #111111; --accent-soft: #2A2A2A; --accent-light: #FFD400; --hero: #0D0D0D;
+  --hl: #FFD400; --hl-ink: #111111; --scene-hl: #FFD400; --scene-hl-ink: #111111;
+  --r-s: 4px; --r: 6px; --r-l: 8px;
+  --flap: linear-gradient(180deg, #2B2B2B 0 49%, #0A0A0A 49% 51%, #222 51% 100%);
+  --display-weight: 700; --display-tracking: 0em; --title-weight: 700; --ui-weight: 700; --wave-cut: #444444;
+}
+#bg-light { background: #101010; }
+#bg-light::after { opacity: .6; background-image: repeating-linear-gradient(180deg, rgba(255,255,255,.025) 0 2px, transparent 2px 6px); -webkit-mask-image: none; mask-image: none; }
+#bg-dark { background: radial-gradient(1200px 700px at 50% 40%, #1D1D1D, #0A0A0A); } #bg-dark::after { display: none; }
+.scene h1 { font-size: 60px; text-transform: uppercase; line-height: 1.3; }
+.scene h1 .line > span { white-space: nowrap; }
+.scene h1 .line { overflow: visible; }
+.scene h1 .flap { display: inline-block; min-width: .74em; text-align: center; margin: 0 .05em .08em 0; border-radius: 7px; color: #F2F2F2;
+  background: var(--flap); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 4px 0 #050505; }
+.scene h1 .flap.sp { background: none; box-shadow: none; }
+.scene h1 .soft .flap { color: #FFD400; }
+.cap { text-transform: uppercase; font-size: 34px; } .cap .hl { border-radius: 4px; }
+.card, .chip, .steps .st, .nametag, .browser { background: #161616; border: 1px solid #2E2E2E; color: var(--ink); }
+.card .title { text-transform: uppercase; letter-spacing: .02em; font-size: 24px; }
+.icon { background: #2A2A2A; color: #FFD400; border-radius: 4px; }
+.kbd { background: var(--flap); color: #F2F2F2; border: none; }
+.chip.dark { background: #FFD400; color: #111; } .chip.dark svg { color: #111; }
+.btn.light { background: #FFD400; color: #111; } .btn.glass { border-color: #444; }
+.tag { background: #FFD400; color: #111; } .tag .lic { color: #111; }
+.eyebrow { color: #FFD400; }
+.spot .ring { border: 2px solid #FFD400; box-shadow: 0 0 0 4px rgba(255,212,0,.25); } .spot .label { background: #FFD400; color: #111; }

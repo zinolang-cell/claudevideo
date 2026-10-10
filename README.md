@@ -7,7 +7,7 @@
 - zooms and spotlights on what you click
 - motion-design cards
 - screenshots of the websites you mention, as B-roll
-- your own website's look
+- one of 20 animation styles, your own website's look, or both
 
 Everything runs on your computer with **Node, Playwright, ffmpeg and Whisper**. There are no video frameworks (no Hyperframes, no Remotion), no accounts and no credits.
 
@@ -19,15 +19,51 @@ Everything runs on your computer with **Node, Playwright, ffmpeg and Whisper**. 
 - **Zooms and spotlights** the buttons, menus and list items you talk about.
 - **Adds motion-design cards**: product cards, shortcuts, checklists, numbers, step-by-step cards, a typing prompt, and your real audio waveform with the pauses collapsing.
 - **Uses websites as B-roll.** Playwright screenshots every site you mention and shows it in a 3D carousel, a browser frame or a scrolling page.
-- **Copies your brand.** Give it your website and it reads the fonts, colours, corner radius, easing and heading style, so the video looks like your site. You can pick a style preset instead.
+- **Applies an animation style.** Pick from 20 styles, each with its own fonts, colours and animated background.
+- **Copies your brand.** Give it your website and it reads the fonts, colours, corner radius, easing and heading style, so the video looks like your site. You can combine both: a style, tinted with your brand.
 - **Delivers** a 1080p MP4 at 30 or 60 fps, with loudness-normalised voice and subtle sound effects.
 
-Before it touches your video, the skill does two things:
+Before it touches your video, the skill does three things:
 
 1. It **searches the web for open-source assets** (logos, icons, emoji, Lottie animations, sound effects, music, stock footage) and checks their licences.
-2. It **asks you** whether to use a website or a style as the visual reference.
+2. It **sets up the project** (Playwright, fonts).
+3. It **renders the board below with your own headline** and asks which style you want, and whether to reference your website.
 
 It then shows you **preview frames first** and renders the MP4 only after you've seen them.
+
+## 20 animation styles
+
+![20 animation styles, rendered by the skill](docs/styles-board.jpg)
+
+The styles:
+
+- 01 ASCII Art
+- 02 Comic
+- 03 Pixel Art
+- 04 Liquid Morph
+- 05 Glassmorphism
+- 06 Kinetic Type
+- 07 Wireframe 3D
+- 08 Split-Flap
+- 09 Clay 3D
+- 10 Halftone
+- 11 Isometric
+- 12 Paper Cut
+- 13 Retro VHS
+- 14 Topo Lines
+- 15 Bauhaus
+- 16 Blueprint
+- 17 Art Deco
+- 18 Terminal
+- 19 Neo-Brutalism
+- 20 Particles
+
+Every style moves, for example a living ASCII field, a flipping departure board, a headline that types itself in a terminal, a technical drawing that draws itself, or a particle galaxy around the speaker. Captions, cards, spotlights and the intro and outro all adapt to the chosen style. You can try them yourself:
+
+```
+node style.mjs board --title "Your headline" --title2 "second line"   # the board, with your text
+node style.mjs use 18                                                 # apply one (here: Terminal)
+```
 
 ## Install
 

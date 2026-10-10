@@ -1,0 +1,33 @@
+/* 19 Neo-Brutalism: flat loud colours, thick black borders, hard shadows. Spinning stickers: fx/neobrutal.js */
+@font-face { font-family: 'StyleDisplay'; src: url('/node_modules/@fontsource/archivo-black/files/archivo-black-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: 'StyleSans'; src: url('/node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2') format('woff2'); font-weight: 300 700; font-display: block; }
+:root {
+  --font: 'StyleSans', system-ui, sans-serif; --font-display: 'StyleDisplay', Impact, sans-serif; --font-title: 'StyleDisplay', Impact, sans-serif;
+  --ink: #000000; --ink-2: #111111; --muted: #444444;
+  --bg: #FFFFFF; --bg-soft: #FFF9EC; --bg-tint: #FFF1D6; --line: #000000; --line-strong: #000000; --dot: #9A9A9A;
+  --accent: #FF4FB8; --accent-deep: #000000; --accent-soft: #FFE600; --accent-light: #FFE600; --hero: #FF6BCB;
+  --hl: #FFE600; --hl-ink: #000000;
+  --scene-ink: #000000; --scene-soft: #FFFFFF; --scene-lead: #000000; --scene-hl: #FFE600; --scene-hl-ink: #000000; --scene-line: #000000; --scene-tag-bg: #FFFFFF;
+  --r-s: 8px; --r: 12px; --r-l: 16px;
+  --shadow-1: 4px 4px 0 #000; --shadow-2: 6px 6px 0 #000; --shadow-3: 10px 10px 0 #000;
+  --display-weight: 400; --display-tracking: -.01em; --title-weight: 400; --ui-weight: 700; --wave-cut: #BDBDBD;
+}
+#bg-light { background: radial-gradient(rgba(0,0,0,.14) 1.2px, transparent 1.4px) 0 0/22px 22px, #FFF9EC; } #bg-light::after { display: none; }
+#bg-dark { background: #FF6BCB; } #bg-dark::after { display: none; }
+#plate { border: 4px solid #000; }
+#cam { box-shadow: 0 0 0 5px #000, 8px 8px 0 5px #000; }
+.card, .chip, .steps .st, .nametag, .browser { border: 3px solid #000; box-shadow: 6px 6px 0 #000; }
+.card { background: #FFF; } .card .title { font-size: 30px; }
+.chip { background: #FFE600; } .chip.dark { background: #4D7CFE; color: #FFF; } .chip.dark svg { color: #FFF; }
+.icon { background: #2BD67B; color: #000; border: 2px solid #000; border-radius: 10px; }
+.kbd { border: 2px solid #000; box-shadow: 3px 3px 0 #000; background: #FFF; color: #000; }
+.scene h1 { font-size: 122px; line-height: .98; }
+.scene h1 .soft { color: #FFF; -webkit-text-stroke: 3px #000; paint-order: stroke fill; }
+.scene .eyebrow { color: #000; background: #FFE600; border: 3px solid #000; padding: 6px 12px; box-shadow: 4px 4px 0 #000; }
+.scene p.lead { background: #FFF; border: 3px solid #000; padding: 10px 16px; display: inline-block; box-shadow: 5px 5px 0 #000; }
+.nametag { background: #FFF; }
+.btn { border: 3px solid #000; box-shadow: 5px 5px 0 #000; border-radius: 12px; } .btn.light { background: #FFE600; color: #000; } .btn.glass { background: #FFF; color: #000; }
+.tag { background: #000; } .tag .lic { color: #FFE600; }
+.cap .hl { border: 2px solid #000; border-radius: 8px; }
+.spot .ring { border: 4px solid #000; box-shadow: 0 0 0 4px #FFE600; } .spot .label { background: #FF6BCB; color: #000; border: 3px solid #000; }
+.check { background: #2BD67B; color: #000; border: 2px solid #000; }

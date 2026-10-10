@@ -1,0 +1,23 @@
+/* 20 Particles: deep space, airy light type, glowing dots. Galaxy swirl: fx/particles.js */
+@font-face { font-family: 'StyleSans'; src: url('/node_modules/@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2') format('woff2'); font-weight: 200 800; font-display: block; }
+:root {
+  --font: 'StyleSans', system-ui, sans-serif;
+  --ink: #EEF2FF; --ink-2: #DCE3FF; --muted: #8C96B8;
+  --bg: #0B0E1A; --bg-soft: #080A14; --bg-tint: #10142A; --line: #1F2540; --line-strong: #2E3660; --dot: #2E3660;
+  --accent: #8AB4FF; --accent-deep: #0B0E1A; --accent-soft: #1B2648; --accent-light: #F5E6C8; --hero: #04050A;
+  --hl: #8AB4FF; --hl-ink: #04050A; --scene-hl: #F5E6C8; --scene-hl-ink: #04050A; --scene-soft: #F5E6C8;
+  --r-s: 10px; --r: 16px; --r-l: 22px;
+  --shadow-1: 0 0 0 1px rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.4); --shadow-2: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5); --shadow-3: 0 0 0 1px rgba(255,255,255,.08), 0 40px 100px rgba(0,0,0,.6);
+  --display-weight: 300; --display-tracking: -.045em; --title-weight: 500; --ui-weight: 500; --wave-cut: #2E3660;
+}
+#bg-light { background: radial-gradient(1400px 800px at 50% 30%, #0D1226, #05060C); } #bg-light::after { display: none; }
+#bg-dark { background: radial-gradient(1200px 900px at 40% 45%, #0B1022, #020309); } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 1px rgba(255,255,255,.55), 0 0 60px rgba(138,180,255,.35); }
+.card, .chip, .steps .st, .nametag, .browser { background: rgba(12,15,30,.80); border: 1px solid rgba(255,255,255,.10); color: var(--ink); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.icon { background: #1B2648; color: #8AB4FF; }
+.kbd { background: #10142A; border: 1px solid #2E3660; color: #EEF2FF; }
+.chip.dark { background: #F5E6C8; color: #04050A; } .chip.dark svg { color: #04050A; }
+.btn.light { background: #F5E6C8; color: #04050A; } .btn.glass { border-color: rgba(255,255,255,.25); }
+.tag { background: #10142A; border: 1px solid #2E3660; } .tag .lic { color: #F5E6C8; }
+.list .li { border-color: #1F2540; }
+.spot .ring { border: 1px solid #FFF; box-shadow: 0 0 0 4px rgba(138,180,255,.25), 0 0 30px rgba(138,180,255,.45); } .spot .label { background: #8AB4FF; color: #04050A; }

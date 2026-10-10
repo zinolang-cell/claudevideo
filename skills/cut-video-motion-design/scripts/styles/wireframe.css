@@ -1,0 +1,30 @@
+/* 07 Wireframe 3D: neon cyan line work on near-black, outline type. Grid floor + rotating solid: fx/wireframe.js */
+@font-face { font-family: 'StyleSans'; src: url('/node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2') format('woff2'); font-weight: 300 700; font-display: block; }
+@font-face { font-family: 'StyleMono'; src: url('/node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; font-display: block; }
+:root {
+  --font: 'StyleSans', system-ui, sans-serif; --font-label: 'StyleMono', monospace;
+  --ink: #E6F7FF; --ink-2: #CDEBFA; --muted: #7FA6B8;
+  --bg: #0A1018; --bg-soft: #070B12; --bg-tint: #0E1622; --line: #12324A; --line-strong: #1E5A80; --dot: #1E5A80;
+  --accent: #00E5FF; --accent-deep: #05202B; --accent-soft: #052A35; --accent-light: #00E5FF; --hero: #04060B;
+  --hl: #00E5FF; --hl-ink: #04060B; --scene-hl: #00E5FF; --scene-hl-ink: #04060B;
+  --r-s: 2px; --r: 4px; --r-l: 6px;
+  --shadow-1: 0 0 0 1px rgba(0,229,255,.35); --shadow-2: 0 0 0 1px rgba(0,229,255,.45), 0 0 30px rgba(0,229,255,.12); --shadow-3: 0 0 0 1px rgba(0,229,255,.5), 0 0 60px rgba(0,229,255,.15);
+  --display-weight: 600; --display-tracking: -.01em; --title-weight: 600; --ui-weight: 500; --wave-cut: #1E5A80;
+}
+#bg-light { background: #05080E; } #bg-light::after { display: none; }
+#bg-dark { background: #04060B; } #bg-dark::after { display: none; }
+#plate { border: 1px solid rgba(0,229,255,.6); }
+#cam { box-shadow: 0 0 0 2px #00E5FF, 0 0 30px rgba(0,229,255,.5); }
+.card, .chip, .steps .st, .nametag, .browser { background: rgba(4,8,14,.88); border: 1px solid rgba(0,229,255,.55); color: var(--ink); }
+.card { box-shadow: 0 0 0 1px rgba(0,229,255,.15), 0 0 40px rgba(0,229,255,.10); }
+.icon { background: transparent; border: 1px solid #00E5FF; color: #00E5FF; border-radius: 4px; }
+.kbd { background: transparent; border: 1px solid #00E5FF; color: #E6F7FF; }
+.chip.dark { background: #00E5FF; color: #04060B; } .chip.dark svg { color: #04060B; }
+.scene h1 { text-transform: uppercase; font-size: 104px; letter-spacing: .01em; }
+.scene h1 .soft { color: transparent; -webkit-text-stroke: 1.5px #00E5FF; }
+.eyebrow { letter-spacing: .22em; }
+.btn.light { background: #00E5FF; color: #04060B; } .btn.glass { border-color: #00E5FF; }
+.tag { background: #04060B; border: 1px solid #00E5FF; } .tag .lic { color: #00E5FF; }
+.cap .hl { border-radius: 2px; }
+.spot, .spot .ring { border-radius: 2px; } .spot .ring { border: 1px solid #00E5FF; box-shadow: 0 0 0 3px rgba(0,229,255,.25), 0 0 24px rgba(0,229,255,.5); }
+.spot .label { background: #00E5FF; color: #04060B; border-radius: 2px; }

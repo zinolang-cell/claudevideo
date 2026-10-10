@@ -1,0 +1,28 @@
+/* 09 Clay 3D: soft pastel clay surfaces and chunky rounded type. Floating clay shapes: fx/clay.js */
+@font-face { font-family: 'StyleRound'; src: url('/node_modules/@fontsource-variable/baloo-2/files/baloo-2-latin-wght-normal.woff2') format('woff2'); font-weight: 400 800; font-display: block; }
+:root {
+  --font: 'StyleRound', system-ui, sans-serif;
+  --ink: #3D2E2A; --ink-2: #4A3A35; --muted: #8C7A73;
+  --bg: #FFFFFF; --bg-soft: #F6EFE9; --bg-tint: #F1E6DD; --line: #EADDD3; --line-strong: #D9C8BB; --dot: #D9C8BB;
+  --accent: #FF7A59; --accent-deep: #B4462B; --accent-soft: #FFE3D9; --accent-light: #FFC4B3; --hero: #FFD6C9;
+  --hl: #FFD86B; --hl-ink: #3D2E2A;
+  --scene-ink: #3D2E2A; --scene-soft: #FF7A59; --scene-lead: #6B5650; --scene-hl: #FFD86B; --scene-hl-ink: #3D2E2A; --scene-line: rgba(61,46,42,.15); --scene-tag-bg: #FFFDFB;
+  --r-s: 18px; --r: 28px; --r-l: 36px;
+  --clay: inset -6px -8px 14px rgba(120,80,60,.12), inset 6px 6px 12px rgba(255,255,255,.85), 0 16px 32px rgba(120,80,60,.18);
+  --shadow-1: var(--clay); --shadow-2: var(--clay); --shadow-3: 0 0 0 10px #FFFDFB, 0 30px 60px rgba(120,80,60,.25);
+  --display-weight: 800; --display-tracking: -.02em; --title-weight: 700; --ui-weight: 700; --wave-cut: #D9C8BB;
+}
+#bg-light { background: radial-gradient(1000px 600px at 15% 0%, #FFE9DF, transparent 70%), radial-gradient(900px 600px at 100% 100%, #DFF3EE, transparent 70%), #F6EFE9; }
+#bg-light::after { display: none; }
+#bg-dark { background: linear-gradient(160deg, #FFD6C9 0%, #F6E7FF 55%, #CDE7F0 100%); } #bg-dark::after { display: none; }
+#cam { box-shadow: 0 0 0 9px #FFFDFB, 0 22px 44px rgba(120,80,60,.32); }
+.card, .chip, .steps .st, .nametag, .browser { border: none; box-shadow: var(--clay); }
+.card { background: #FFFDFB; } .chip { background: #FFFDFB; }
+.chip.dark { background: #FF7A59; color: #FFF; } .chip.dark svg { color: #FFF; }
+.icon { background: #FFE3D9; color: #FF7A59; border-radius: 16px; box-shadow: inset -3px -4px 8px rgba(120,80,60,.12), inset 3px 3px 6px rgba(255,255,255,.9); }
+.kbd { background: #FFFDFB; border: none; box-shadow: var(--clay); border-radius: 14px; }
+.scene h1 { font-size: 116px; line-height: 1.02; }
+.btn { border-radius: 999px; } .btn.light { background: #FF7A59; color: #FFF; box-shadow: var(--clay); } .btn.glass { background: #FFFDFB; color: #3D2E2A; border: none; box-shadow: var(--clay); }
+.cap .hl { border-radius: 14px; box-shadow: inset -3px -3px 6px rgba(120,80,60,.15); }
+.tag { background: #3D2E2A; } .tag .lic { color: #FFD86B; }
+.spot .ring { border: 3px solid #FFFFFF; border-radius: 18px; box-shadow: 0 0 0 6px rgba(255,122,89,.5); } .spot .label { background: #FF7A59; border-radius: 999px; }

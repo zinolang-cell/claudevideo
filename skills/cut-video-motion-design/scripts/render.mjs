@@ -76,6 +76,7 @@ for (const c of timeline.callouts.filter(c => c.kind === 'wave')) {
 // ---- score ----------------------------------------------------------------------------------------------------------------
 const score = {
   W: P.W, H: P.H, fps: R.fps, duration: cuts.duration, speechEnd: cuts.speechEnd,
+  styleFx: fs.existsSync(P.build('style.js')) ? rel('build/style.js') + '?v=' + fs.statSync(P.build('style.js')).mtimeMs : null,
   screen: { w: meta.screen.w, h: meta.screen.h, n: meta.frames, fps: meta.fps, base: rel('build/frames/screen') + '/' },
   cam: meta.cam ? { ...meta.cam, base: rel('build/frames/cam') + '/' } : null, paint: meta.paint,
   cuts: segs.slice(1).map(g => g.o0),
@@ -89,6 +90,7 @@ const score = {
 };
 fs.writeFileSync(P.build('score.json'), JSON.stringify(score));
 if (!fs.existsSync(P.build('brand.css'))) fs.writeFileSync(P.build('brand.css'), '/* no brand yet: run brand_from_tokens.mjs */');
+if (!fs.existsSync(P.build('style.css'))) fs.writeFileSync(P.build('style.css'), '/* no animation style: node style.mjs use <n> */');
 console.log(`score: ${score.duration.toFixed(2)}s, ${score.captions.length} caption lines, ${score.callouts.length} callouts, ${score.broll.length} b-roll, ${score.camera.length} camera moves`);
 if (args.includes('--score-only')) process.exit(0);
 
