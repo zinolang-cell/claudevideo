@@ -1,6 +1,6 @@
 ---
 name: cut-video-motion-design
-description: Turn a raw screen recording, tutorial or talking-head video into a finished, branded edit without Hyperframes or Remotion. Whisper transcribes it with word timing, pauses are cut out automatically, captions animate word by word, and zooms, spotlights, motion-design cards and transitions are added. The look comes from one of 20 animation styles (ASCII Art, Comic, Pixel Art, Liquid Morph, Glassmorphism, Kinetic Type, Wireframe 3D, Split-Flap, Clay 3D, Halftone, Isometric, Paper Cut, Retro VHS, Topo Lines, Bauhaus, Blueprint, Art Deco, Terminal, Neo-Brutalism, Particles) shown to the user as a rendered board, and/or from a reference website captured with Playwright. Website screenshots also appear as B-roll, and everything renders frame-exact with Playwright + ffmpeg, with sound effects. Use this whenever someone wants to cut, trim, edit, caption or subtitle a recording (mp4/mov/webm), remove pauses or filler, add motion graphics, animation styles or nice transitions, make a YouTube/LinkedIn/tutorial video look professional, match their brand or website style, or show screenshots of websites in a video, even if they only say "cut my video" or "@recording.mp4 make this nice".
+description: Turn a raw screen recording, tutorial or talking-head video into a finished, branded edit without Hyperframes or Remotion. Whisper transcribes it with word timing, pauses are cut out automatically, captions animate word by word, and zooms, spotlights, motion-design cards and transitions are added. The look comes from one of 20 animation styles (ASCII Art, Comic, Pixel Art, Liquid Morph, Glassmorphism, Kinetic Type, Wireframe 3D, Split-Flap, Clay 3D, Halftone, Isometric, Paper Cut, Retro VHS, Topo Lines, Bauhaus, Blueprint, Art Deco, Terminal, Neo-Brutalism, Particles) shown to the user as a rendered board, and/or from a reference website captured with Playwright. Website screenshots also appear as B-roll, and everything renders frame-exact with Playwright + ffmpeg, with sound effects. Before the MP4 is rendered, every still is hosted on a local review page (localhost) with sound, chapters and notes, and the user is asked for permission to render. Use this whenever someone wants to cut, trim, edit, caption or subtitle a recording (mp4/mov/webm), remove pauses or filler, add motion graphics, animation styles or nice transitions, make a YouTube/LinkedIn/tutorial video look professional, match their brand or website style, or show screenshots of websites in a video, even if they only say "cut my video" or "@recording.mp4 make this nice".
 ---
 
 # Cut a video with captions, motion design and a website-based style
@@ -13,6 +13,7 @@ This skill turns a raw recording into an edited video:
 - motion-design cards explain each step
 - website screenshots appear as B-roll
 - the intro and outro use one of 20 animation styles (ASCII Art to Particles), the look of a reference website, or both
+- before the MP4 is rendered, the user watches every still on a local review page with sound, leaves notes, and says yes
 
 Everything runs locally with **Node + Playwright + ffmpeg + Whisper**. Don't swap in Hyperframes, Remotion or another video framework. The point of this pipeline is that it needs no framework, account, licence or credits, and every frame is a pure function of time, so any frame can be previewed or re-rendered on its own.
 
@@ -25,7 +26,9 @@ recording.mp4
   ├─ Playwright ──> reference-site screenshots + design tokens ──> brand.css
   │             └─> screenshots of sites mentioned in the video ──> B-roll
   └─ timeline.mjs (your edit decisions, anchored to spoken words)
-         └─> compose/ (HTML/CSS page, renderFrame(t)) ──> Playwright screenshots per frame ──> ffmpeg H.264 + SFX mix
+         └─> compose/ (HTML/CSS page, renderFrame(t))
+               ├─> review stills + final audio ──> review page on localhost ──> the user says yes (or leaves notes)
+               └─> Playwright screenshots per frame ──> ffmpeg H.264 + SFX mix   (only after the yes)
 ```
 
 ## Before you start: three steps, in this order
@@ -125,19 +128,48 @@ node render.mjs --preview 3.2,7.7                 # at OUTPUT seconds
 node render.mjs --sheet 24                        # 24 evenly spaced frames -> build/preview/sheet.jpg
 ```
 
-Open every sheet yourself as an image and fix what is off. Typical fixes: wrapped card titles, overlaps, a zoom cutting off the clicked element, empty-looking cards, low-contrast labels, text over a busy area. Then show the user a contact sheet and ask for changes before the full render. Stills take seconds; a full render takes minutes. A short `--range 60,75` render checks motion: whether transitions feel right, whether a zoom is too fast, whether a dissolve hides a jump.
+Open every sheet yourself as an image and fix what is off. Typical fixes: wrapped card titles, overlaps, a zoom cutting off the clicked element, empty-looking cards, low-contrast labels, text over a busy area. Stills take seconds; a full render takes minutes. A short `--range 60,75` render checks motion: whether transitions feel right, whether a zoom is too fast, whether a dissolve hides a jump. These checks are for you. The user reviews the edit on the review page in step 8.
 
-### 8. Render
+### 8. Show every still on a review page, then ask before rendering
 
-Run `node render.mjs`. It starts `render.workers` workers, each with its own Chromium; every worker renders a contiguous range and pipes JPEG frames into its own x264 chunk. The chunks are then joined losslessly. Separately, the voice is processed (high-pass, compressor, loudnorm to about −16 LUFS) and mixed with the SFX cues.
+The user approves the edit on a local review page, not by watching the MP4. A full render takes minutes and has to be redone after every change. Render the MP4 only after the user has seen the stills and said yes.
+
+1. **Render the review stills:** `node render.mjs --stills`. It renders the whole edit at 15 stills per second, in full and half size. It mixes the final audio, so the page sounds exactly like the MP4 will. Everything goes to `build/review/`, with a manifest of chapters, motion-design moments, zooms and cuts. A 3-minute video takes about 1.5 minutes and 450 MB. Use `--stills 30` for smoother motion on short videos and `--stills 8` for long ones.
+2. **Start the review server and keep it running:** `node review.mjs`, as a background task (`run_in_background` in Claude Code). It prints the address: `http://localhost:5000/`, or the next free port when 5000 is taken (macOS AirPlay and other dev servers often use it). Running it again only prints the address of the server that's already running.
+3. **Send the user the address** and the essentials:
+   - Space plays the edit with sound, and ←/→ steps one still.
+   - The timeline marks chapters, cards, B-roll, spotlights, zooms and cut pauses.
+   - Hovering over the timeline previews a still.
+   - N writes a note pinned to the current moment.
+4. **Ask for permission to render** with AskUserQuestion (in other agents, ask in the chat and wait). Ask "Render the MP4 now?" with these options:
+   - "Yes, render it"
+   - "Apply my notes from the review page first"
+   - "Change something else first"
+
+   Don't start the full render until the user picks "Yes".
+5. **Apply changes.** Read `build/review/notes.json`. Each note has:
+   - `t`: output seconds
+   - `src`: source seconds, the value to use in `timeline.mjs` with `at()`
+   - `text`: what to change
+
+   Fix the edit and set `"done": true` on each note you handled (the page strikes them through). Then update the stills:
+   - `node render.mjs --stills --range <from>,<to>` re-renders only that stretch (output seconds; add a second or two of margin).
+   - A change to the cut needs a full `--stills` run. `--range` refuses to run when the cut has changed.
+
+   The open page shows a "New stills are ready" banner. Then ask for permission again.
+
+### 9. Render
+
+Once the user has said yes, run `node render.mjs`. It starts `render.workers` workers, each with its own Chromium; every worker renders a contiguous range and pipes JPEG frames into its own x264 chunk. The chunks are then joined losslessly. Separately, the voice is processed (high-pass, compressor, loudnorm to about −16 LUFS) and mixed with the SFX cues.
 
 As a reference, a 20-thread CPU renders 1080p at about 40–60 frames per second with 6–8 workers, so 3 minutes at 60 fps takes about 4 minutes. Use 30 fps when speed matters more than motion smoothness.
 
-### 9. QA and delivery
+### 10. QA and delivery
 
 - Run `ffprobe` on the output (duration, 1920×1080, fps, yuv420p, BT.709) and `ffmpeg -i out.mp4 -af ebur128=peak=true -f null -` (aim for about −16 to −14 LUFS, true peak ≤ −1 dBFS).
 - Pull a contact sheet from the final MP4, not from previews, to catch encoding or timing problems.
 - Tell the user where the file is and what was done: seconds of pauses removed, chapters, the style source. Give them the credits list from `assets/ledger.json`, including licences that require or appreciate attribution.
+- Stop the review server with `node review.mjs --stop` (or stop its background task). Tell the user that `build/review/` can be deleted; it takes about 450 MB per 3 minutes of video.
 
 ## Files in this skill
 
@@ -152,7 +184,9 @@ As a reference, a 20-thread CPU renders 1080p at about 40–60 frames per second
 | `scripts/brand_from_tokens.mjs` | tokens.json or a preset → `build/brand.css` (font via Fontsource) |
 | `scripts/style.mjs` | The 20 animation styles: `list`, `board` (numbered examples), `use <n>`, `clear` |
 | `scripts/styles/` | Style presets: `<id>.css`, `fx/<id>.js` animation modules, `styles.json`, `tile.html` |
-| `scripts/render.mjs` | Score builder, preview/sheet/range/full render, audio mix |
+| `scripts/render.mjs` | Score builder, preview/sheet/range/full render, review stills (`--stills`), audio mix |
+| `scripts/review.mjs` | Local review server for `build/review/` on localhost (port 5000 or the next free one); saves notes; `--stop` |
+| `scripts/review/index.html` | The review page: player with sound, timeline with chapters, cards, zooms and cuts, chapter and moment cards, notes |
 | `scripts/compose/` | The compositor page: `index.html`, `style.css`, `compose.js` (`renderFrame(t)`) |
 | `scripts/templates/` | `project.example.json`, `timeline.example.mjs` |
 | `references/asset-sources.md` | Where and how to find open-source assets, by category and licence |

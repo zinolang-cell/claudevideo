@@ -48,7 +48,8 @@
     "whoosh": { "synth": "whoosh", "gain": -20 },
     "chapter": { "file": "kenney/interface-sounds/toggle-002.ogg", "gain": -24 }
   },
-  "render": { "fps": 60, "workers": 8, "crf": 17, "preset": "medium", "jpegQuality": 95 }
+  "render": { "fps": 60, "workers": 8, "crf": 17, "preset": "medium", "jpegQuality": 95 },
+  "review": { "fps": 15, "quality": 88, "port": 5000 }   // review stills per second, their JPEG quality, first port tried by review.mjs
 }
 ```
 

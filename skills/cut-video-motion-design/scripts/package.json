@@ -9,6 +9,8 @@
     "cut": "node cutplan.mjs --verbose",
     "media": "node cut_media.mjs",
     "sheet": "node render.mjs --sheet 24",
+    "stills": "node render.mjs --stills",
+    "review": "node review.mjs",
     "render": "node render.mjs"
   },
   "dependencies": {

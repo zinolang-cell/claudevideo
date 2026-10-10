@@ -29,5 +29,6 @@
   "sfx": {
     "whoosh": { "synth": "whoosh", "gain": -20 }
   },
-  "render": { "fps": 60, "workers": 6, "crf": 17, "preset": "medium", "jpegQuality": 95 }
+  "render": { "fps": 60, "workers": 6, "crf": 17, "preset": "medium", "jpegQuality": 95 },
+  "review": { "fps": 15, "port": 5000 }
 }

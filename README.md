@@ -21,6 +21,7 @@ Everything runs on your computer with **Node, Playwright, ffmpeg and Whisper**. 
 - **Uses websites as B-roll.** Playwright screenshots every site you mention and shows it in a 3D carousel, a browser frame or a scrolling page.
 - **Applies an animation style.** Pick from 20 styles, each with its own fonts, colours and animated background.
 - **Copies your brand.** Give it your website and it reads the fonts, colours, corner radius, easing and heading style, so the video looks like your site. You can combine both: a style, tinted with your brand.
+- **Shows you the edit before rendering.** Every still goes on a local review page (`http://localhost:5000`). It has a player with the final sound and a timeline marking chapters, cards, zooms and cut pauses. You can pin notes to exact moments. The MP4 renders only after you say yes.
 - **Delivers** a 1080p MP4 at 30 or 60 fps, with loudness-normalised voice and subtle sound effects.
 
 Before it touches your video, the skill does three things:
@@ -29,7 +30,7 @@ Before it touches your video, the skill does three things:
 2. It **sets up the project** (Playwright, fonts).
 3. It **renders the board below with your own headline** and asks which style you want, and whether to reference your website.
 
-It then shows you **preview frames first** and renders the MP4 only after you've seen them.
+Before rendering, it hosts **every still of the edit on a local review page** with sound and asks for your permission. The MP4 is rendered only after you say yes. If you leave notes on the page instead, it applies them and shows you the updated stills.
 
 ## 20 animation styles
 
@@ -130,8 +131,9 @@ The skill checks all of this (`check_env.mjs`) and tells you what's missing. Pla
    and use https://your-website.com as the style reference
    ```
 
-3. Answer the style question. Look at the preview contact sheets it shows you and ask for changes.
-4. Let it render the MP4. It lands next to your recording as `my-recording_edit.mp4`.
+3. Answer the style question.
+4. Open the review page it gives you (`http://localhost:5000`, or the next free port). Watch the edit with sound. Where something should change, pause and press N to leave a note.
+5. Say yes to render the MP4, or ask it to apply your notes first. The MP4 lands next to your recording as `my-recording_edit.mp4`.
 
 Tips:
 
@@ -149,7 +151,9 @@ recording.mp4
   │             └─> websites you mention ──> B-roll screenshots
   ├─ style.mjs ──> the style you picked ──> style.css + animated background (style.js)
   └─ timeline.mjs (edit decisions, anchored to spoken words)
-         └─> compose/ (an HTML page that draws any frame from its time) ──> Playwright, frame by frame ──> ffmpeg MP4 + sound
+         └─> compose/ (an HTML page that draws any frame from its time)
+               ├─> review stills + final sound ──> review page on localhost ──> you say yes, or leave notes
+               └─> Playwright, frame by frame ──> ffmpeg MP4 + sound   (after your yes)
 ```
 
 Every frame is a pure function of time, so any moment can be previewed in seconds and the render runs in parallel. On a 20-thread CPU it renders about 40–60 frames per second.
@@ -163,9 +167,10 @@ skills/cut-video-motion-design/
 │                             timeline format, design rules, animation styles,
 │                             troubleshooting
 └── scripts/                  check_env, transcribe, words, cutplan, cut_media,
-                              capture_site, brand_from_tokens, style, render,
-                              compose/ (the compositor page), styles/ (the 20 style
-                              presets and their animated backgrounds), templates/
+                              capture_site, brand_from_tokens, style, render, review,
+                              compose/ (the compositor page), review/ (the review page),
+                              styles/ (the 20 style presets and their animated
+                              backgrounds), templates/
 .claude-plugin/               plugin + marketplace manifests for Claude Code
 docs/                         the style board shown above
 ```

@@ -19,3 +19,9 @@
 | Whisper hallucinates at the end | Silence or clicks after the last sentence | `cut.end` before the click; `captions.skip` for the phantom words |
 | Webcam bubble paint-out visible during a zoom | The fill colour is the median of the surroundings | Fine on flat UI. For busy backgrounds keep zooms away from the bubble area, or leave `cam` out of `project.json` so the original bubble stays in the screen layer (it then zooms with the screen) |
 | Playwright browser missing | Playwright updated its Chromium revision | `npx playwright install chromium` |
+| Review page is not on port 5000 | Port 5000 is taken (macOS AirPlay Receiver, other dev servers) | Nothing to fix: `review.mjs` takes the next free port and prints it. Pin one with `--port` or `review.port` |
+| Review page shows "No stills yet" | `render.mjs --stills` hasn't run, or ran in another project folder | Run it in the folder with `project.json`; the page loads the stills by itself once they exist |
+| Review page shows old stills | It was opened before the last `--stills` run | Click "Load them" in the "New stills are ready" banner, or reload the page |
+| No sound on the review page | Muted, or `build/review/audio.m4a` is missing | Check the "Sound" button; re-run `--stills` (it mixes the audio) |
+| `--stills --range` refuses to run | The cut or the still rate changed since the last full run | Run `node render.mjs --stills` without `--range` |
+| Notes don't save ("Not saved") | The review server was stopped | Start `node review.mjs` again; notes already saved stay in `build/review/notes.json` |

@@ -4,6 +4,8 @@
 //   node render.mjs --preview-src 19,57.5   stills at SOURCE seconds (as in timeline.mjs)
 //   node render.mjs --sheet 24              contact sheet of 24 evenly spaced frames -> build/preview/sheet.jpg
 //   node render.mjs --range 60,75           render only that output range (fast iteration) -> build/range.mp4
+//   node render.mjs --stills [fps]          the whole edit as review stills (default 15 fps) + final audio mix -> build/review/
+//                                           (add --range 60,75 to update only part of them); show them with: node review.mjs
 //   node render.mjs --score-only            just write build/score.json
 import { chromium } from 'playwright';
 import { spawn, spawnSync } from 'node:child_process';
@@ -113,11 +115,43 @@ async function openPage(browser) {
   await page.goto(`${ORIGIN}/compose/index.html`);
   await page.waitForFunction(() => window.composeReady === true, null, { timeout: 60000 });
   const cdp = await page.context().newCDPSession(page);
-  const grab = async (format = 'jpeg') => Buffer.from((await cdp.send('Page.captureScreenshot', { format, quality: format === 'jpeg' ? R.jpegQuality : undefined, optimizeForSpeed: true })).data, 'base64');
+  const grab = async (format = 'jpeg', quality = R.jpegQuality) => Buffer.from((await cdp.send('Page.captureScreenshot', { format, quality: format === 'jpeg' ? quality : undefined, optimizeForSpeed: true })).data, 'base64');
   return { page, grab, render: t => page.evaluate(t => window.renderFrame(t), t) };
 }
 
 const launch = () => chromium.launch({ args: ['--disable-gpu-vsync', '--disable-frame-rate-limit', '--force-color-profile=srgb', '--font-render-hinting=none'] });
+const run = (cmd, a) => new Promise((ok, fail) => {
+  const p = spawn(cmd, a, { stdio: ['ignore', 'ignore', 'pipe'] }); let err = '';
+  p.stderr.on('data', d => { err += d; }); p.on('close', c => (c === 0 ? ok() : fail(new Error(err))));
+});
+
+// ---- audio: voice chain + SFX cues for an output range -------------------------------------------------------------------------------
+// The MP4 and the review page use this same mix, so what the user hears in the review is what gets rendered.
+function mixAudio([a, b], out, codec = ['-c:a', 'pcm_s16le']) {
+  const cues = [], SFX = P.sfx || {};
+  const addCue = (name, t) => { if (SFX[name] && t >= a && t < b) cues.push({ name, t: t - a }); };
+  addCue('intro', 0.25);
+  score.chapters.slice(1).forEach(c => addCue('chapter', c.t));
+  [...score.callouts, ...score.broll].forEach(c => c.sfx && addCue(c.sfx, c.t0 + 0.02));
+  addCue('outro', score.outroStart + 0.2);
+  const sfxFiles = {};
+  for (const [name, s] of Object.entries(SFX)) {
+    if (s.synth === 'whoosh') {
+      const f = P.build('assets/whoosh.wav');
+      spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'anoisesrc=d=0.75:c=pink:r=48000:a=0.7', '-af',
+        'bandpass=f=1400:width_type=o:w=2.4,afade=t=in:st=0:d=0.3:curve=qsin,afade=t=out:st=0.3:d=0.45:curve=qsin,aformat=channel_layouts=stereo', f]);
+      sfxFiles[name] = f;
+    } else sfxFiles[name] = P.res(path.join(A.sfxDir || 'assets/sfx', s.file));
+  }
+  const audioIn = ['-ss', String(a), '-t', String(b - a), '-i', P.build('voice.wav')];
+  cues.forEach(c => audioIn.push('-i', sfxFiles[c.name]));
+  const voice = '[0:a]highpass=f=80,acompressor=threshold=-22dB:ratio=3:attack=8:release=140:makeup=2,loudnorm=I=-16:TP=-2:LRA=9[v]';
+  const sfxChains = cues.map((c, i) => `[${i + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=${SFX[c.name].gain}dB,adelay=${Math.round(c.t * 1000)}:all=1[s${i}]`);
+  const mix = `[v]${cues.map((_, i) => `[s${i}]`).join('')}amix=inputs=${cues.length + 1}:normalize=0:duration=first,alimiter=limit=0.95[a]`;
+  const r = spawnSync('ffmpeg', ['-v', 'error', '-y', ...audioIn, '-filter_complex', [voice, ...sfxChains, mix].join(';'), '-map', '[a]', '-ar', '48000', ...codec, out], { stdio: 'inherit' });
+  if (r.status !== 0) { console.error('audio mix failed'); process.exit(1); }
+  return out;
+}
 
 // ---- preview stills ---------------------------------------------------------------------------------------------------------------
 const pv = opt('preview') ?? (opt('preview-src') ? opt('preview-src').split(',').map(s => at(+s)).join(',') : null);
@@ -147,6 +181,76 @@ if (pv || opt('sheet')) {
   server.close(); process.exit(0);
 }
 
+// ---- review stills: the whole edit at a lower frame rate, full + half size, the final audio mix and a manifest ----------------------------
+// The review page (node review.mjs) plays them with sound, so the user can approve the edit before the MP4 render.
+if (args.includes('--stills')) {
+  const rv = (...p) => P.build('review', ...p), D = cuts.duration, r3 = x => +(+x).toFixed(3);
+  const segList = segs.map(g => [r3(g.o0), r3(g.o1), r3(g.s0)]);         // output start, output end, source start: output -> source time
+  const old = fs.existsSync(rv('manifest.json')) ? JSON.parse(fs.readFileSync(rv('manifest.json'), 'utf8')) : null;
+  const part = opt('range') ? opt('range').split(',').map(Number) : null;
+  const v = opt('stills'), SF = v && /^\d+(\.\d+)?$/.test(v) ? +v : (part && old?.fps) || P.review?.fps || 15;
+  const N = Math.ceil(D * SF - 1e-6);
+  // --range only replaces stills of the same cut at the same rate; anything else would leave stills at the wrong times
+  if (part && (!old || old.fps !== SF || old.frames !== N || JSON.stringify(old.segments) !== JSON.stringify(segList))) {
+    console.error('--stills --range updates part of an existing set of the same cut and still rate. The cut changed, or there is no full set yet: run node render.mjs --stills without --range.');
+    process.exit(1);
+  }
+  const S0 = part ? Math.max(0, Math.floor(part[0] * SF)) : 0, S1 = part ? Math.min(N, Math.ceil(part[1] * SF)) : N;
+  if (!part) for (const d of ['full', 'half']) fs.rmSync(rv(d), { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });   // notes.json stays
+  for (const d of ['full', 'half']) fs.mkdirSync(rv(d), { recursive: true });
+  const HW = Math.round(P.W / 4) * 2, HH = Math.round(P.H / 4) * 2, name = f => `f${String(f).padStart(5, '0')}.jpg`;
+  const count = S1 - S0, NWs = Math.max(1, Math.min(R.workers, Math.ceil(count / 40))), per = Math.ceil(count / NWs);
+  const t0 = Date.now(); let done = 0;
+  await Promise.all(Array.from({ length: NWs }, async (_, k) => {
+    const a = S0 + k * per, b = Math.min(S1, a + per); if (a >= b) return;
+    const browser = await launch(), w = await openPage(browser);
+    for (let f = a; f < b; f++) {
+      await w.render(f / SF);
+      fs.writeFileSync(rv('full', name(f)), await w.grab('jpeg', P.review?.quality ?? 88));
+      if (++done % 300 === 0) console.log(`${done}/${count} stills  ${(done / ((Date.now() - t0) / 1000)).toFixed(1)} per s`);
+    }
+    await browser.close();
+    // half size: what the page plays (decoded full-size frames would use too much memory); full size is shown when paused
+    await run('ffmpeg', ['-v', 'error', '-y', '-start_number', String(a), '-i', rv('full', 'f%05d.jpg'), '-frames:v', String(b - a),
+      '-vf', `scale=${HW}:${HH}:flags=lanczos`, '-q:v', '4', '-start_number', String(a), rv('half', 'f%05d.jpg')]);
+  }));
+  server.close();
+  mixAudio([0, D], rv('audio.m4a'), ['-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart']);
+
+  // what the page needs to label the timeline: sections (intro, chapters, outro), motion-design moments, zooms and cuts
+  const strip = s => String(s ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  const fr = t => Math.max(0, Math.min(N - 1, Math.round(t * SF)));
+  const bounds = [{ t: 0, label: score.intro ? 'Intro' : 'Start', kind: score.intro ? 'intro' : 'main' }];
+  if (score.intro && !score.chapters.some(c => Math.abs(c.t - score.introEnd) < 0.5)) bounds.push({ t: score.introEnd, label: 'Main part', kind: 'main' });
+  bounds.push(...score.chapters.map(c => ({ t: c.t, label: `${String(c.n).padStart(2, '0')} · ${strip(c.title)}`, kind: 'chapter' })));
+  if (score.outro) bounds.push({ t: score.outroStart, label: 'Outro', kind: 'outro' });
+  bounds.sort((x, y) => x.t - y.t);
+  const sections = bounds.map((s, i) => ({ ...s, t1: Math.min(D, bounds[i + 1]?.t ?? D) })).filter(s => s.t1 - s.t >= 0.3)
+    .map(s => ({ label: s.label, kind: s.kind, t0: r3(s.t), t1: r3(s.t1), poster: fr(s.t + Math.min(s.kind === 'chapter' ? 1.5 : 2.4, (s.t1 - s.t) * 0.6)) }));
+  const what = c => strip(c.title ?? c.titleHtml ?? c.text ?? c.keys?.join(' › ') ?? (c.valueHtml && `${c.valueHtml} ${c.label ?? ''}`) ?? c.heading?.join(' ') ?? c.eyebrow ?? c.label);
+  const moments = [
+    ...score.callouts.map(c => ({ kind: c.kind, t0: c.t0, t1: c.t1, label: what(c) })),
+    ...score.broll.map(b => ({ kind: b.kind, t0: b.t0, t1: b.t1, label: strip(b.url ?? b.tag?.text ?? b.items?.map(i => i.name || i.url).join(' · ')) })),
+    ...(score.spots || []).map(s => ({ kind: 'spot', t0: s.t0, t1: s.t1, label: strip(s.label) || 'Spotlight' })),
+  ].filter(m => m.t0 < D).sort((x, y) => x.t0 - y.t0)
+    .map(m => ({ ...m, t0: r3(m.t0), t1: r3(Math.min(m.t1, D)), poster: fr(Math.min(m.t0 + 0.8, (m.t0 + m.t1) / 2)) }));
+  const style = fs.existsSync(P.build('style.json')) ? JSON.parse(fs.readFileSync(P.build('style.json'), 'utf8')).name : null;
+  const manifest = {
+    version: Date.now(), rendered: new Date().toISOString(), title: P.title || path.basename(P.output || P.dir).replace(/\.\w+$/, ''),
+    width: P.W, height: P.H, half: [HW, HH], fps: SF, videoFps: R.fps, frames: N, duration: D, audio: 'audio.m4a', style,
+    source: { name: P.source ? path.basename(P.source) : null, duration: cuts.sourceDuration ?? null, cuts: segs.length - 1 },
+    sections, moments,
+    zooms: score.camera.map(c => r3(c.t)).filter(t => t < D),
+    cuts: segs.slice(1).map((g, i) => ({ t: r3(g.o0), removed: +(g.s0 - segs[i].s1).toFixed(2) })),
+    segments: segList,
+    partial: part ? [r3(S0 / SF), r3(S1 / SF)] : null,
+  };
+  fs.writeFileSync(rv('manifest.json'), JSON.stringify(manifest));
+  console.log(`stills: ${count} of ${N} at ${SF} fps (full ${P.W}x${P.H} + half ${HW}x${HH}) in ${((Date.now() - t0) / 1000).toFixed(0)}s -> ${rv()}`);
+  console.log('show them: node review.mjs   (keep it running; it prints the address)');
+  process.exit(0);
+}
+
 // ---- full / range render ------------------------------------------------------------------------------------------------------------
 const range = opt('range') ? opt('range').split(',').map(Number) : [0, cuts.duration];
 const F0 = Math.round(range[0] * R.fps), F1 = Math.round(range[1] * R.fps);
@@ -174,36 +278,12 @@ await Promise.all(Array.from({ length: NW }, async (_, k) => {
 server.close();
 console.log(`frames done in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 
-// ---- audio: voice chain + SFX cues ---------------------------------------------------------------------------------------------------
-const cues = [];
-const SFX = P.sfx || {};
-const addCue = (name, t) => { if (SFX[name] && t >= range[0] && t < range[1]) cues.push({ name, t: t - range[0] }); };
-addCue('intro', 0.25);
-score.chapters.slice(1).forEach(c => addCue('chapter', c.t));
-[...score.callouts, ...score.broll].forEach(c => c.sfx && addCue(c.sfx, c.t0 + 0.02));
-addCue('outro', score.outroStart + 0.2);
-const sfxFiles = {};
-for (const [name, s] of Object.entries(SFX)) {
-  if (s.synth === 'whoosh') {
-    const f = P.build('assets/whoosh.wav');
-    spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'anoisesrc=d=0.75:c=pink:r=48000:a=0.7', '-af',
-      'bandpass=f=1400:width_type=o:w=2.4,afade=t=in:st=0:d=0.3:curve=qsin,afade=t=out:st=0.3:d=0.45:curve=qsin,aformat=channel_layouts=stereo', f]);
-    sfxFiles[name] = f;
-  } else sfxFiles[name] = P.res(path.join(A.sfxDir || 'assets/sfx', s.file));
-}
-const audioIn = ['-ss', String(range[0]), '-t', String(range[1] - range[0]), '-i', P.build('voice.wav')];
-cues.forEach(c => audioIn.push('-i', sfxFiles[c.name]));
-const voice = '[0:a]highpass=f=80,acompressor=threshold=-22dB:ratio=3:attack=8:release=140:makeup=2,loudnorm=I=-16:TP=-2:LRA=9[v]';
-const sfxChains = cues.map((c, i) => `[${i + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=${SFX[c.name].gain}dB,adelay=${Math.round(c.t * 1000)}:all=1[s${i}]`);
-const mix = `[v]${cues.map((_, i) => `[s${i}]`).join('')}amix=inputs=${cues.length + 1}:normalize=0:duration=first,alimiter=limit=0.95[a]`;
-const mixed = P.build('mix.wav');
-let r = spawnSync('ffmpeg', ['-v', 'error', '-y', ...audioIn, '-filter_complex', [voice, ...sfxChains, mix].join(';'), '-map', '[a]', '-ar', '48000', '-c:a', 'pcm_s16le', mixed], { stdio: 'inherit' });
-if (r.status !== 0) process.exit(1);
+const mixed = mixAudio(range, P.build('mix.wav'));
 
 // ---- concat chunks + mux ------------------------------------------------------------------------------------------------------------------------
 const chunkList = fs.readdirSync(chunkDir).filter(f => f.endsWith('.mp4')).sort().map(f => `file '${path.join(chunkDir, f).split(path.sep).join('/')}'`).join('\n');
 fs.writeFileSync(path.join(chunkDir, 'list.txt'), chunkList);
 const out = opt('range') ? P.build('range.mp4') : P.output;
-r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', path.join(chunkDir, 'list.txt'), '-i', mixed,
+const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', path.join(chunkDir, 'list.txt'), '-i', mixed,
   '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', out], { stdio: 'inherit' });
 console.log(r.status === 0 ? `wrote ${out}` : 'mux failed');

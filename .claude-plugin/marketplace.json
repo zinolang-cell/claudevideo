@@ -9,7 +9,7 @@
     {
       "name": "cut-video-motion-design",
       "source": "./",
-      "description": "Turn a raw screen recording or talking-head video into a finished edit: pauses cut, word-by-word captions, zooms, spotlights, motion-design cards and website screenshots as B-roll, in one of 20 animation styles or styled after your own website. No Hyperframes, no Remotion.",
+      "description": "Turn a raw screen recording or talking-head video into a finished edit: pauses cut, word-by-word captions, zooms, spotlights, motion-design cards and website screenshots as B-roll, in one of 20 animation styles or styled after your own website. You approve every still on a local review page before the MP4 is rendered. No Hyperframes, no Remotion.",
       "category": "media",
       "tags": [
         "video",
