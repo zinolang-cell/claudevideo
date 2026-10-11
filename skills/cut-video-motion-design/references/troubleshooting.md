@@ -25,3 +25,6 @@
 | No sound on the review page | Muted, or `build/review/audio.m4a` is missing | Check the "Sound" button; re-run `--stills` (it mixes the audio) |
 | `--stills --range` refuses to run | The cut or the still rate changed since the last full run | Run `node render.mjs --stills` without `--range` |
 | Notes don't save ("Not saved") | The review server was stopped | Start `node review.mjs` again; notes already saved stay in `build/review/notes.json` |
+| Mix louder than planned, peaks at 0 dBFS | ffmpeg's `alimiter` scales its output back up to 0 dBFS unless `level=0` | `render.mjs` sets `level=0`; the ceiling is `project.audio.limit` (0.95 ≈ −0.4 dBFS, 0.86 ≈ −1.3 dBFS) |
+| Pop-ups or banners in source screenshots | Newsletter layers, chat widgets, consent layers, in-page notices | `capture_site.mjs ... --no-overlays`; in-page banners with `--remove "<selectors>"` |
+| `cutplan.mjs --verbose` fails with ENOENT `--verbose` | Older versions read the first argument as the project file | Fixed: arguments starting with `--` are never taken as the project path |

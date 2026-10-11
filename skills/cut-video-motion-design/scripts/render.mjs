@@ -134,6 +134,7 @@ function mixAudio([a, b], out, codec = ['-c:a', 'pcm_s16le']) {
   score.chapters.slice(1).forEach(c => addCue('chapter', c.t));
   [...score.callouts, ...score.broll].forEach(c => c.sfx && addCue(c.sfx, c.t0 + 0.02));
   addCue('outro', score.outroStart + 0.2);
+  (score.cues || []).forEach(c => addCue(c.sfx, c.t));                // free cues from the timeline: [{ t, sfx }]
   const sfxFiles = {};
   for (const [name, s] of Object.entries(SFX)) {
     if (s.synth === 'whoosh') {
@@ -145,9 +146,9 @@ function mixAudio([a, b], out, codec = ['-c:a', 'pcm_s16le']) {
   }
   const audioIn = ['-ss', String(a), '-t', String(b - a), '-i', P.build('voice.wav')];
   cues.forEach(c => audioIn.push('-i', sfxFiles[c.name]));
-  const voice = '[0:a]highpass=f=80,acompressor=threshold=-22dB:ratio=3:attack=8:release=140:makeup=2,loudnorm=I=-16:TP=-2:LRA=9[v]';
+  const voice = `[0:a]highpass=f=80,acompressor=threshold=-22dB:ratio=3:attack=8:release=140:makeup=2,loudnorm=I=${P.audio?.lufs ?? -16}:TP=${P.audio?.truePeak ?? -2}:LRA=9[v]`;   // project.audio.lufs: TikTok/Reels about -14; measure, with SFX and the limiter it lands about 1 LU lower
   const sfxChains = cues.map((c, i) => `[${i + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=${SFX[c.name].gain}dB,adelay=${Math.round(c.t * 1000)}:all=1[s${i}]`);
-  const mix = `[v]${cues.map((_, i) => `[s${i}]`).join('')}amix=inputs=${cues.length + 1}:normalize=0:duration=first,alimiter=limit=0.95[a]`;
+  const mix = `[v]${cues.map((_, i) => `[s${i}]`).join('')}amix=inputs=${cues.length + 1}:normalize=0:duration=first,alimiter=limit=${P.audio?.limit ?? 0.95}:level=0[a]`;   // level=0: no auto gain back to 0 dBFS
   const r = spawnSync('ffmpeg', ['-v', 'error', '-y', ...audioIn, '-filter_complex', [voice, ...sfxChains, mix].join(';'), '-map', '[a]', '-ar', '48000', ...codec, out], { stdio: 'inherit' });
   if (r.status !== 0) { console.error('audio mix failed'); process.exit(1); }
   return out;

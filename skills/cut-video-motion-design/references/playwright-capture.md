@@ -16,9 +16,14 @@ node capture_site.mjs <url> <outDir> [options]
   --locale en-US               page language (cookie banners and copy follow it)
   --dark                       prefers-color-scheme: dark
   --wait 1500                  extra settle time in ms (animations, fonts, video posters)
-  --hide "h1, nav, .hero p"    CSS selectors to hide before the shots (clean backgrounds)
+  --hide "h1, nav, .hero p"    CSS selectors to hide before the shots (clean backgrounds; keeps their space)
+  --remove "#siteNotice"       CSS selectors to remove entirely (in-page banners, e.g. Wikipedia's notices)
+  --no-overlays                remove fixed/sticky pop-ups and modal dialogs (newsletters, chat widgets, leftover
+                               consent layers) and release their scroll lock; a slim top navigation bar stays
   --prefix hero-clean-         file name prefix so a second pass doesn't overwrite the first
 ```
+
+For sources shown in a vertical video, a phone-sized capture fits the frame and reads well: `--width 430 --height 932 --dsf 2.5 --no-tokens --sections 0 --no-overlays`.
 
 Outputs in `<outDir>`:
 
@@ -44,13 +49,13 @@ Outputs in `<outDir>`:
 
 ## Pitfalls
 
-- **Cookie banners.** The script clicks the first visible consent button matching common English/German labels in any frame. If a banner survives, add its button text to `CONSENT` or hide the banner with `--hide`.
+- **Cookie banners.** The script clicks the first visible consent button matching common English/German labels in any frame (including "Consent" and "Keep analytics off"). If a banner survives, add its button text to `CONSENT`, or run with `--no-overlays`.
 - **Scroll-reveal content.** Many sites fade content in with IntersectionObserver. The script scrolls the page once before shooting, but a full-page screenshot can still show blank white areas where reveals reset. Per-section screenshots (taken scrolled into view) are more reliable. Stack them with `ffmpeg -i a.png -i b.png -filter_complex "[0]scale=1920:-1[a];[1]scale=1920:-1[b];[a][b]vstack" scroll.png` for a scrolling browser shot.
 - **Background videos** freeze on one frame. That is usually fine and often looks good as a backdrop. `--wait` lets a poster or first frame load. The site's video file URL is in the DOM (`video.currentSrc`); only use it when it's the user's own site.
 - **Clean hero backgrounds** for intro/outro: capture again with the headline, buttons and navigation hidden (`--hide "#hero-title, .hero__aside, nav" --dsf 1 --prefix hero-clean-`). Find selectors by printing the hero's DOM path in a short `page.evaluate`.
 - **Logos** come from `tokens.logos` or the `<link rel=icon>` URLs. Download with `curl`. Small raster logos (< 100 px) are fine at nav size and get soft above that. Prefer an SVG from the site's press page.
 - **Bot protection** (Cloudflare "checking your browser") sometimes blocks headless Chromium. Retry with `--wait 4000`, try `chromium.launch({ channel: 'chrome' })` or `'msedge'`, or capture a different page of the same site.
-- **Notification bars and promos** on third-party sites can clutter a shot. Hide them with `--hide`, or crop by giving the browser frame a `scroll.from` offset in the timeline.
+- **Notification bars and promos** on third-party sites can clutter a shot. `--no-overlays` removes floating ones; `--remove` takes out in-page banners (Wikipedia: `--remove "#siteNotice, #centralNotice"`). Or crop by giving the browser frame a `scroll.from` offset in the timeline.
 
 ## Ethics
 

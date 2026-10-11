@@ -49,16 +49,21 @@
     "chapter": { "file": "kenney/interface-sounds/toggle-002.ogg", "gain": -24 }
   },
   "render": { "fps": 60, "workers": 8, "crf": 17, "preset": "medium", "jpegQuality": 95 },
-  "review": { "fps": 15, "quality": 88, "port": 5000 }   // review stills per second, their JPEG quality, first port tried by review.mjs
+  "review": { "fps": 15, "quality": 88, "port": 5000 },  // review stills per second, their JPEG quality, first port tried by review.mjs
+  "audio": { "lufs": -16, "truePeak": -2, "limit": 0.95 } // voice loudness target, its true-peak ceiling, final limiter (linear)
 }
 ```
+
+**Loudness:** YouTube is fine at the default (about −16 LUFS). For TikTok, Reels and Shorts aim for about −14 LUFS with true peaks under −1 dBTP. The SFX and the final limiter pull the result about 1 LU below `lufs`, so measure the mix (`ffmpeg -i build/review/audio.m4a -af ebur128=peak=true -f null -`) and adjust. Example: `"lufs": -12.6, "limit": 0.86` gave −14.4 LUFS at −1.1 dBTP.
 
 ## 2. timeline.mjs
 
 ```js
 export default ({ at, sites, P, cuts }) => ({ layout, introEnd, outroStart, dissolve, intro, outro,
-                                             chapters, camera, spots, callouts, broll, holds });
+                                             chapters, camera, spots, callouts, broll, holds, cues });
 ```
+
+- `cues` (optional): extra sound effects that aren't tied to an element, such as a whoosh on a layout change: `[{ t: at(26.7), sfx: 'whoosh' }]`. Every name must exist in `project.sfx`.
 
 - `at(src)` maps a **source** time (seconds in the raw recording) to the output timeline. Write every time as `at(<source seconds>)` and take the seconds from `build/cuts.json` → `words[].src` (or from `build/words.json`). If you re-cut later, nothing drifts.
 - Inside a removed pause, `at()` returns the start of the next kept segment.

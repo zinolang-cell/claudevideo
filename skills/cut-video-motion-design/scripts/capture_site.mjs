@@ -2,6 +2,7 @@
 // design tokens (CSS variables, fonts, dominant colors, logo candidates) for use as a style reference.
 // usage: node capture_site.mjs <url> <outDir> [--dsf 2] [--width 1920] [--height 1080] [--sections 8] [--no-tokens]
 //        [--locale en-US] [--dark] [--wait 1500] [--hide "css, selectors"] [--prefix name]
+//        [--remove "css, selectors"] [--no-overlays]   remove banners (display:none) / fixed pop-ups and dialogs
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -12,7 +13,7 @@ const outDir = args[1] || 'build/sites/' + new URL(url).hostname.replace(/^www\.
 const opt = (name, def) => { const i = args.indexOf('--' + name); return i >= 0 ? args[i + 1] : def; };
 const DSF = +opt('dsf', 2), W = +opt('width', 1920), H = +opt('height', 1080), MAX_SECTIONS = +opt('sections', 8);
 const wantTokens = !args.includes('--no-tokens');
-const LOCALE = opt('locale', 'en-US'), WAIT = +opt('wait', 800), HIDE = opt('hide', ''), PREFIX = opt('prefix', '');
+const LOCALE = opt('locale', 'en-US'), WAIT = +opt('wait', 800), HIDE = opt('hide', ''), PREFIX = opt('prefix', ''), REMOVE = opt('remove', '');
 if (!url) { console.error('usage: node capture_site.mjs <url> <outDir>'); process.exit(1); }
 fs.mkdirSync(outDir, { recursive: true });
 
@@ -20,7 +21,7 @@ fs.mkdirSync(outDir, { recursive: true });
 const CONSENT = [
   /^(alle )?akzeptieren$/i, /^alle cookies akzeptieren$/i, /^zustimmen$/i, /^einverstanden$/i, /^verstanden$/i,
   /^accept( all)?( cookies)?$/i, /^allow all( cookies)?$/i, /^i agree$/i, /^agree$/i, /^got it$/i, /^ok(ay)?$/i,
-  /^nur notwendige$/i, /^ablehnen$/i, /^reject all$/i, /^decline$/i,
+  /^nur notwendige$/i, /^ablehnen$/i, /^reject all$/i, /^decline$/i, /^consent$/i, /^keep (analytics|cookies) off$/i,
 ];
 
 const browser = await chromium.launch();
@@ -54,6 +55,20 @@ await page.evaluate(async () => {
 });
 await page.evaluate(() => document.fonts.ready);
 if (HIDE) await page.addStyleTag({ content: `${HIDE} { visibility: hidden !important; }` });
+if (REMOVE) await page.addStyleTag({ content: `${REMOVE} { display: none !important; }` });
+// Newsletter pop-ups, chat widgets and leftover consent dialogs: fixed/sticky layers that cover a real part of the
+// viewport (a slim top navigation bar stays), plus modal dialogs. Scroll locks of modals are released.
+if (args.includes('--no-overlays')) await page.evaluate(() => {
+  const area = innerWidth * innerHeight;
+  for (const el of document.querySelectorAll('body *')) {
+    const cs = getComputedStyle(el);
+    const modal = el.getAttribute('role') === 'dialog' || el.getAttribute('aria-modal') === 'true';
+    if (!modal && cs.position !== 'fixed' && cs.position !== 'sticky') continue;
+    const r = el.getBoundingClientRect(), slimBar = r.top <= 1 && r.height < 110;
+    if (modal || (!slimBar && r.width * r.height > area * 0.08)) el.style.setProperty('display', 'none', 'important');
+  }
+  for (const el of [document.documentElement, document.body]) { el.style.setProperty('overflow', 'auto', 'important'); el.style.setProperty('position', 'static', 'important'); }
+});
 await page.waitForTimeout(WAIT);
 
 const shots = [];

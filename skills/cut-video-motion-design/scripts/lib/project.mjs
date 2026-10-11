@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export function loadProject(file = 'project.json') {
-  const abs = path.resolve(file);
+  const abs = path.resolve(file && !file.startsWith('--') ? file : 'project.json');   // options like --verbose are not a project file
   const dir = path.dirname(abs);
   const P = JSON.parse(fs.readFileSync(abs, 'utf8'));
   P.dir = dir;
