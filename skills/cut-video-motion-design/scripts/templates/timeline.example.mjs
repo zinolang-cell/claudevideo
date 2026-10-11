@@ -15,7 +15,7 @@ export default ({ at, sites }) => {
       plate,
       camMain: { cx: plate.x + CAM.cx * s0, cy: plate.y + CAM.cy * s0, r: CAM.r * s0 },
       camIntro: { cx: 540, cy: 470, r: 250 },
-      camOutro: { cx: 540, cy: 470, r: 230 },
+      // no camOutro: the round webcam bubble leaves when the outro starts (the end card stays clean)
     },
     introEnd: at(8.9),            // the word where the actual topic starts
     outroStart: at(175.0),        // the word where the goodbye starts

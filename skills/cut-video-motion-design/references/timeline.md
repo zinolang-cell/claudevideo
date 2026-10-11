@@ -81,14 +81,16 @@ layout: {
   plate,
   camMain:  { cx: plate.x + CAM_CX_IN_SCREEN * s0, cy: plate.y + CAM_CY_IN_SCREEN * s0, r: CAM_R * s0 }, // over the painted-out bubble
   camIntro: { cx: 540, cy: 470, r: 250 },        // big bubble next to the intro title
-  camOutro: { cx: 540, cy: 470, r: 230 },
+  // camOutro: { cx: 540, cy: 470, r: 230 },     // only if the speaker should stay on the end card as a round bubble
 },
 introEnd: at(9.05),          // main layout takes over here (the speaker starts the actual topic)
 outroStart: at(183.3),       // end card starts here
 dissolve: 0.12,              // cross-dissolve after every jump cut (screen + webcam)
 ```
 
-With `plate.w = 1520` the card leaves about 120 px below it for captions at 1080p, and 60 px above it for the chapter header. With `intro: null` or `outro: null` the main layout runs from the first or to the last frame; `camIntro`/`camOutro` can then be left out.
+With `plate.w = 1520` the card leaves about 120 px below it for captions at 1080p, and 60 px above it for the chapter header. With `intro: null` or `outro: null` the main layout runs from the first or to the last frame; `camIntro` can then be left out.
+
+The end card has no round speaker bubble by default: without `camOutro`, the webcam bubble leaves when the outro starts, so the end card shows only the brand, the closing line and the buttons. Add `camOutro` only when someone explicitly wants their face on the end card.
 
 ```js
 intro: { x: 900, y: 255, w: 940, eyebrow: 'Video tutorial', lines: ['Cut videos', 'with Claude Code.'],

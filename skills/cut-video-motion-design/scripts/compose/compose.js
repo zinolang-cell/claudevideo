@@ -31,6 +31,8 @@ const mixRGB = (a, b, p) => `rgb(${a.map((v, i) => Math.round(lerp(v, b[i], p)))
 if (!S.intro) S.introEnd = -10;
 if (!S.outro) S.outroStart = 1e9;
 if (!S.layout.camIntro) S.layout.camIntro = S.layout.camMain;
+// the end card shows no round speaker bubble unless layout.camOutro asks for one: without it the bubble leaves as the outro starts
+const CAM_ON_OUTRO = !!S.layout.camOutro;
 if (!S.layout.camOutro) S.layout.camOutro = S.layout.camMain;
 const W = S.W, H = S.H, L = S.layout, PL = L.plate;
 
@@ -131,7 +133,8 @@ function renderCam(t) {
   Object.assign(camBox.style, { left: g.cx - g.r + 'px', top: g.cy - g.r + 'px', width: g.r * 2 + 'px', height: g.r * 2 + 'px' });
   Object.assign(camCv.style, { width: S.cam.side * sc + 'px', height: S.cam.side * sc + 'px', left: g.r - S.cam.cx * sc + 'px', top: g.r - S.cam.cy * sc + 'px' });
   const intro = 1 - EO(prog(t, 0, .9));                       // first frames: bubble scales in
-  const gone = EIO(prog(t, S.speechEnd + .45, .8));            // after the last word the frozen bubble bows out
+  const gone = Math.max(EIO(prog(t, S.speechEnd + .45, .8)),   // after the last word the frozen bubble bows out
+    CAM_ON_OUTRO ? 0 : EIO(prog(t, S.outroStart, .7)));        // and without layout.camOutro it leaves with the outro
   camBox.style.transform = `scale(${lerp(1, .82, intro) * lerp(1, .86, gone)})`; camBox.style.opacity = (1 - intro) * (1 - gone);
 }
 
