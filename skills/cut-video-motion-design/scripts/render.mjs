@@ -286,5 +286,7 @@ const chunkList = fs.readdirSync(chunkDir).filter(f => f.endsWith('.mp4')).sort(
 fs.writeFileSync(path.join(chunkDir, 'list.txt'), chunkList);
 const out = opt('range') ? P.build('range.mp4') : P.output;
 const r = spawnSync('ffmpeg', ['-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', path.join(chunkDir, 'list.txt'), '-i', mixed,
-  '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', out], { stdio: 'inherit' });
+  '-map', '0:v', '-map', '1:a', '-c:v', 'copy',
+  '-bsf:v', 'h264_metadata=colour_primaries=1:transfer_characteristics=1:matrix_coefficients=1:video_full_range_flag=0',   // BT.709 tags survive the concat
+  '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', out], { stdio: 'inherit' });
 console.log(r.status === 0 ? `wrote ${out}` : 'mux failed');
